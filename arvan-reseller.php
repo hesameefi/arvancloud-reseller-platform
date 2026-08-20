@@ -45,6 +45,10 @@ class Arvan_Reseller_Plugin {
         register_deactivation_hook(__FILE__, array($this, 'deactivate'));
 
         add_action('plugins_loaded', array($this, 'init'));
+
+        // Favicon injector for 0 console errors
+        add_action('wp_head', array($this, 'inject_favicon'));
+        add_action('admin_head', array($this, 'inject_favicon'));
     }
 
     public function init() {
@@ -54,6 +58,12 @@ class Arvan_Reseller_Plugin {
         Arvan_Cron::get_instance();
         Arvan_Admin::get_instance();
         Arvan_Frontend::get_instance();
+    }
+
+    public function inject_favicon() {
+        $icon_url = ARVAN_RESELLER_URL . 'assets/images/favicon.svg';
+        echo '<link rel="icon" type="image/svg+xml" href="' . esc_url($icon_url) . '">' . "\n";
+        echo '<link rel="shortcut icon" href="' . esc_url($icon_url) . '">' . "\n";
     }
 
     public function activate() {
