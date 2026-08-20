@@ -13,7 +13,10 @@ if (!defined('ABSPATH')) {
                 <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b; font-weight: 500;">ثبت دقیق و غیرقابل دستکاری تراکنش‌های شارژ کیف پول و کسر مصرف ساعتی بر اساس استانداردهای حسابداری دوطرفه.</p>
             </div>
         </div>
-        <div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" class="arvan-btn-admin arvan-btn-admin-secondary" id="arvan_admin_theme_toggle">
+                🌙 تم تاریک
+            </button>
             <button type="button" class="arvan-btn-admin arvan-btn-admin-secondary" onclick="exportAdminTableToCSV('arvan_admin_ledger.csv');">
                 📥 دانلود فایل اکسل (CSV)
             </button>

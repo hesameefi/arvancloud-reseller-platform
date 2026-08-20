@@ -17,6 +17,11 @@ $current_margin = floatval(get_option('arvan_reseller_margin', 20));
                 <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b; font-weight: 500;">پیکربندی کلید کاربر ماشین (Machine User)، حاشیه سود خودکار (حداکثر ۲۰٪) و انتخاب موتور هیبریدی لایو/ماک.</p>
             </div>
         </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" class="arvan-btn-admin arvan-btn-admin-secondary" id="arvan_admin_theme_toggle">
+                🌙 تم تاریک
+            </button>
+        </div>
     </div>
 
     <!-- Settings Card -->

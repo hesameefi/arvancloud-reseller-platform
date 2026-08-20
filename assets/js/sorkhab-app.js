@@ -2,6 +2,26 @@
     'use strict';
 
     $(document).ready(function() {
+        // 1. Dual Theme Switcher (Dark & Light)
+        var savedTheme = localStorage.getItem('arvan_theme') || 'dark';
+        $('html').attr('data-theme', savedTheme);
+        updateThemeToggleBtn(savedTheme);
+
+        $(document).on('click', '#ar_theme_toggle_btn', function() {
+            var currentTheme = $('html').attr('data-theme') || 'dark';
+            var nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            $('html').attr('data-theme', nextTheme);
+            localStorage.setItem('arvan_theme', nextTheme);
+            updateThemeToggleBtn(nextTheme);
+        });
+
+        function updateThemeToggleBtn(theme) {
+            var $btn = $('#ar_theme_toggle_btn');
+            if ($btn.length) {
+                $btn.html(theme === 'dark' ? '☀️ تم روشن' : '🌙 تم تاریک');
+            }
+        }
+
         // Tab Navigation Switching
         $(document).on('click', '.ar-nav-pill-btn, .ar-tab-btn', function() {
             var target = $(this).data('tab');
@@ -75,62 +95,68 @@
             });
         });
 
-        // Power Toggle (Power Off / Power On)
+        // Server Power Off/On
         $(document).on('click', '.ar-toggle-power-btn', function() {
             var $btn = $(this);
-            var resourceId = $btn.data('resource-id');
-            var action = $btn.data('action');
+            var serverId = $btn.data('id');
+            var actionType = $btn.data('action');
 
-            var originalText = $btn.html();
-            $btn.prop('disabled', true).html('⏳ ...');
+            var confirmMsg = (actionType === 'power_off') 
+                ? 'آیا از خاموش کردن این سرور ابری اطمینان دارید؟' 
+                : 'آیا مایل به روشن کردن مجدد سرور هستید؟';
+
+            if (!confirm(confirmMsg)) return;
+
+            $btn.prop('disabled', true).text('⏳ در حال پردازش...');
 
             $.post(ArvanApp.ajax_url, {
-                action: 'arvan_customer_toggle_power',
+                action: 'arvan_customer_power_action',
                 nonce: ArvanApp.nonce,
-                resource_id: resourceId,
-                power_action: action
+                server_id: serverId,
+                power_action: actionType
             }, function(res) {
                 if (res.success) {
-                    showToast(res.data, 'success');
+                    showToast(res.data.message, 'success');
                     setTimeout(function() {
                         location.reload();
                     }, 1000);
                 } else {
-                    $btn.prop('disabled', false).html(originalText);
+                    $btn.prop('disabled', false).text('عملیات ناموفق');
                     showToast(res.data, 'error');
                 }
             }).fail(function() {
-                $btn.prop('disabled', false).html(originalText);
-                showToast('خطا در ارسال دستور مدیریت سرور.', 'error');
+                $btn.prop('disabled', false).text('خطای ارتباط');
+                showToast('خطای شبکه.', 'error');
             });
         });
 
-        // Web Console Modal
-        $(document).on('click', '.ar-open-console-btn', function() {
-            var srvName = $(this).data('name');
-            var srvIp = $(this).data('ip');
-
-            $('#ar_console_server_name').text(srvName);
-            $('#ar_console_ip').text(srvIp);
-            $('#ar_console_modal').addClass('active');
-        });
-
-        // Deposit Modal Open / Close
-        $(document).on('click', '#ar_open_deposit_modal', function() {
+        // Deposit Modal Open/Close
+        $('#ar_open_deposit_modal, #ar_hero_deposit_btn').on('click', function() {
             $('#ar_deposit_modal').addClass('active');
         });
 
-        $(document).on('click', '.ar-close-modal', function() {
-            $('.ar-modal-backdrop').removeClass('active');
+        $('#ar_close_deposit_modal').on('click', function() {
+            $('#ar_deposit_modal').removeClass('active');
         });
 
-        // Deposit Form Submit
+        // Deposit Preset Chips
+        $('.ar-deposit-chip').on('click', function() {
+            var amount = $(this).data('amount');
+            $('#ar_deposit_amount_input').val(amount);
+        });
+
+        // Deposit Form Submit (Online Simulated Gateway)
         $('#ar_deposit_form').on('submit', function(e) {
             e.preventDefault();
             var $btn = $(this).find('button[type="submit"]');
-            var amount = $('#ar_deposit_amount').val();
+            var amount = $('#ar_deposit_amount_input').val();
 
-            $btn.prop('disabled', true).html('در حال شارژ...');
+            if (!amount || amount < 10000) {
+                showToast('حداقل مبلغ افزایش اعتبار ۱۰,۰۰۰ تومان می‌باشد.', 'error');
+                return;
+            }
+
+            $btn.prop('disabled', true).html('⏳ در حال اتصال به درگاه پرداخت...');
 
             $.post(ArvanApp.ajax_url, {
                 action: 'arvan_customer_deposit',

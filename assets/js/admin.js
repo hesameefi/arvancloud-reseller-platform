@@ -2,6 +2,27 @@
     'use strict';
 
     $(document).ready(function() {
+        // Admin Dual Theme Switcher
+        var savedAdminTheme = localStorage.getItem('arvan_admin_theme') || 'light';
+        $('.arvan-admin-wrap').attr('data-theme', savedAdminTheme);
+        updateAdminThemeBtn(savedAdminTheme);
+
+        $(document).on('click', '#arvan_admin_theme_toggle', function() {
+            var $wrap = $('.arvan-admin-wrap');
+            var current = $wrap.attr('data-theme') || 'light';
+            var next = (current === 'light') ? 'dark' : 'light';
+            $wrap.attr('data-theme', next);
+            localStorage.setItem('arvan_admin_theme', next);
+            updateAdminThemeBtn(next);
+        });
+
+        function updateAdminThemeBtn(theme) {
+            var $btn = $('#arvan_admin_theme_toggle');
+            if ($btn.length) {
+                $btn.html(theme === 'dark' ? '☀️ تم روشن' : '🌙 تم تاریک');
+            }
+        }
+
         // Save Settings AJAX
         $('#arvan_admin_settings_form').on('submit', function(e) {
             e.preventDefault();
@@ -70,34 +91,43 @@
                 } else {
                     alert('خطا: ' + res.data);
                 }
+            }).fail(function() {
+                $btn.prop('disabled', false).text(original);
+                alert('خطا در برقراری ارتباط.');
             });
         });
 
         // Reset Demo Data
         $('#arvan_btn_reset_demo').on('click', function() {
-            if (!confirm('آیا از پاک‌سازی تمام داده‌های دمو و سرورها اطمینان دارید؟')) {
+            if (!confirm('آیا از ریست کامل داده‌های دمو اطمینان دارید؟ تمام لاگ‌ها، سرورها و کیف پول‌ها صفر خواهند شد.')) {
                 return;
             }
+
             var $btn = $(this);
-            $btn.prop('disabled', true).text('⏳ در حال ریست...');
+            var original = $btn.text();
+            $btn.prop('disabled', true).text('⏳ در حال ریست داده‌ها...');
 
             $.post(ArvanAdmin.ajax_url, {
                 action: 'arvan_reset_demo_data',
                 nonce: ArvanAdmin.nonce
             }, function(res) {
+                $btn.prop('disabled', false).text(original);
                 if (res.success) {
                     alert(res.data);
                     location.reload();
                 } else {
                     alert('خطا: ' + res.data);
                 }
+            }).fail(function() {
+                $btn.prop('disabled', false).text(original);
+                alert('خطا در برقراری ارتباط.');
             });
         });
 
-        // Delete Single Server
-        $('.arvan-delete-server-btn').on('click', function() {
+        // Delete Server
+        $(document).on('click', '.arvan-delete-server-btn', function() {
             var id = $(this).data('id');
-            if (!confirm('آیا از حذف این سرور از سیستم اطمینان دارید؟')) {
+            if (!confirm('آیا از حذف این سرور از پنل مدیریت اطمینان دارید؟')) {
                 return;
             }
 
@@ -114,8 +144,8 @@
             });
         });
 
-        // Edit Server
-        $('.arvan-edit-server-btn').on('click', function() {
+        // Quick Edit Server
+        $(document).on('click', '.arvan-edit-server-btn', function() {
             var id = $(this).data('id');
             var currentName = $(this).data('name');
             var currentStatus = $(this).data('status');

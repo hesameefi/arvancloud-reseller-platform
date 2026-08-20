@@ -16,7 +16,10 @@ if (!defined('ABSPATH')) {
                 <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b; font-weight: 500;">مانیتورینگ پیشرفته ابرک‌های مشتریان، مدیریت کران‌جاب‌های مصرف ساعتی و تسویه‌حساب خودکار سود ریسلری.</p>
             </div>
         </div>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" class="arvan-btn-admin arvan-btn-admin-secondary" id="arvan_admin_theme_toggle">
+                🌙 تم تاریک
+            </button>
             <a href="<?php echo home_url('/'); ?>" target="_blank" class="arvan-btn-admin arvan-btn-admin-secondary">
                 🌐 مشاهده داشبورد مشتریان
             </a>

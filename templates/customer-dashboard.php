@@ -32,6 +32,11 @@ $runway_days = round($runway_hours / 24, 1);
         </div>
 
         <div class="ar-navbar-actions">
+            <!-- Theme Toggle Switcher -->
+            <button type="button" class="ar-btn ar-btn-secondary" id="ar_theme_toggle_btn" style="padding: 7px 16px; font-size: 13px; border-radius: 20px;">
+                ☀️ تم روشن
+            </button>
+
             <!-- Live Wallet Pill -->
             <div class="ar-wallet-pill">
                 <div class="ar-wallet-meta">

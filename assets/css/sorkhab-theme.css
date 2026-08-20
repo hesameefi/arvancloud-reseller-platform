@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sorkhab Pro Design System - Yekan Bakh Typography & Luxury Full-Bleed SaaS
+   Sorkhab Pro Design System - Yekan Bakh Typography & Dual Theme (Light & Dark)
    ========================================================================== */
 
 /* 1. Local Server Yekan Bakh Font Definitions */
@@ -43,13 +43,15 @@
     font-display: swap;
 }
 
-:root {
-    /* Brand Color Palette */
+/* ==========================================================================
+   Dual Theme Color Tokens (Official Sorkhab Design System)
+   ========================================================================== */
+:root, [data-theme="dark"] {
     --ar-primary: #00baba;
     --ar-primary-hover: #00d6d6;
     --ar-primary-glow: rgba(0, 186, 186, 0.25);
     
-    /* Dark Surface & Backgrounds */
+    /* Dark Surfaces */
     --ar-bg-body: #06090e;
     --ar-bg-header: rgba(12, 17, 24, 0.92);
     --ar-bg-surface: #0e141c;
@@ -62,17 +64,17 @@
     --ar-border-active: rgba(0, 186, 186, 0.45);
     --ar-border-card: #1e293b;
     
-    /* Text Hierarchy */
+    /* Text */
     --ar-text-primary: #f8fafc;
     --ar-text-secondary: #94a3b8;
     --ar-text-muted: #64748b;
     
-    /* Status Colors */
+    /* Status */
     --ar-status-success: #10b981;
     --ar-status-warning: #f59e0b;
     --ar-status-danger: #ef4444;
 
-    /* Metrics & Geometry (Rounded Minimalism) */
+    /* Metrics */
     --ar-radius-2xl: 22px;
     --ar-radius-xl: 18px;
     --ar-radius-lg: 14px;
@@ -80,6 +82,48 @@
     --ar-radius-sm: 8px;
     --ar-shadow-glow: 0 0 25px rgba(0, 186, 186, 0.18);
     --ar-shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    --ar-brand-text: #ffffff;
+    --ar-table-head-bg: #090e15;
+}
+
+[data-theme="light"] {
+    --ar-primary: #00baba;
+    --ar-primary-hover: #009b9b;
+    --ar-primary-glow: rgba(0, 186, 186, 0.25);
+    
+    /* Light Surfaces (Sorkhab Official) */
+    --ar-bg-body: #f8fafc;
+    --ar-bg-header: rgba(255, 255, 255, 0.94);
+    --ar-bg-surface: #f1f5f9;
+    --ar-bg-card: #ffffff;
+    --ar-bg-card-hover: #f8fafc;
+    --ar-bg-input: #ffffff;
+    
+    /* Borders & Dividers */
+    --ar-border-subtle: #e2e8f0;
+    --ar-border-active: #00baba;
+    --ar-border-card: #e2e8f0;
+    
+    /* Text */
+    --ar-text-primary: #0f172a;
+    --ar-text-secondary: #475569;
+    --ar-text-muted: #64748b;
+    
+    /* Status */
+    --ar-status-success: #16a34a;
+    --ar-status-warning: #d97706;
+    --ar-status-danger: #dc2626;
+
+    /* Metrics */
+    --ar-radius-2xl: 22px;
+    --ar-radius-xl: 18px;
+    --ar-radius-lg: 14px;
+    --ar-radius-md: 10px;
+    --ar-radius-sm: 8px;
+    --ar-shadow-glow: 0 0 20px rgba(0, 186, 186, 0.15);
+    --ar-shadow-card: 0 4px 20px -4px rgba(0, 0, 0, 0.06), 0 0 0 1px #e2e8f0;
+    --ar-brand-text: #0f172a;
+    --ar-table-head-bg: #f1f5f9;
 }
 
 /* ==========================================================================
@@ -97,9 +141,9 @@ html, body {
     direction: rtl;
     text-align: right;
     overflow-x: hidden !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Strip ALL WordPress Theme padding & layout constraints */
 body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)),
 body .is-layout-flow > :where(:not(.alignleft):not(.alignright):not(.alignfull)),
 .wp-site-blocks,
@@ -115,7 +159,6 @@ main.wp-block-group,
     background: transparent !important;
 }
 
-/* Hide WP default theme header, footer, navigation and post title */
 header.wp-block-template-part,
 footer.wp-block-template-part,
 .wp-block-navigation,
@@ -134,9 +177,7 @@ footer.wp-block-template-part,
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
-    background: radial-gradient(circle at 50% 0%, rgba(0, 186, 186, 0.09) 0%, transparent 65%),
-                radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
-                var(--ar-bg-body);
+    background-color: var(--ar-bg-body);
     box-sizing: border-box;
     font-family: 'Yekan Bakh', sans-serif !important;
 }
@@ -163,6 +204,7 @@ footer.wp-block-template-part,
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+    transition: all 0.3s ease;
 }
 
 .ar-brand-group {
@@ -189,7 +231,7 @@ footer.wp-block-template-part,
     font-size: 20px !important;
     font-weight: 900 !important;
     letter-spacing: -0.3px;
-    color: #ffffff !important;
+    color: var(--ar-brand-text) !important;
 }
 
 .ar-brand-info span {
@@ -216,22 +258,21 @@ footer.wp-block-template-part,
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-/* User & Wallet Navbar Section */
 .ar-navbar-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
 }
 
 .ar-wallet-pill {
-    background: #101620;
+    background: var(--ar-bg-card);
     border: 1px solid var(--ar-border-card);
     border-radius: 35px;
     padding: 7px 20px;
     display: flex;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--ar-shadow-card);
     transition: all 0.25s ease;
 }
 
@@ -247,7 +288,7 @@ footer.wp-block-template-part,
 .ar-wallet-meta-title {
     font-size: 11px;
     color: var(--ar-text-muted);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .ar-wallet-meta-value {
@@ -258,7 +299,7 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
-   Main Content Area (Wide & Rounded)
+   Main Content Area
    ========================================================================== */
 .ar-main-content {
     flex: 1;
@@ -269,7 +310,7 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
-   Bento Metrics Dashboard Grid (Rounded & Clean Typography)
+   Bento Metrics Dashboard Grid
    ========================================================================== */
 .ar-bento-grid {
     display: grid;
@@ -292,26 +333,10 @@ footer.wp-block-template-part,
     overflow: hidden;
 }
 
-.ar-bento-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, var(--ar-primary), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
 .ar-bento-card:hover {
     transform: translateY(-3px);
     border-color: var(--ar-border-active);
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45), var(--ar-shadow-glow);
-}
-
-.ar-bento-card:hover::before {
-    opacity: 1;
+    box-shadow: var(--ar-shadow-glow), var(--ar-shadow-card);
 }
 
 .ar-bento-icon {
@@ -322,7 +347,7 @@ footer.wp-block-template-part,
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--ar-bg-surface);
     border: 1px solid var(--ar-border-subtle);
     flex-shrink: 0;
 }
@@ -336,7 +361,7 @@ footer.wp-block-template-part,
     font-size: 13px;
     color: var(--ar-text-secondary);
     margin-bottom: 5px;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -357,7 +382,7 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
-   Navigation Tabs (Segmented Control - Rounded & No Ugly Scrollbar)
+   Navigation Tabs
    ========================================================================== */
 .ar-nav-pills {
     display: flex;
@@ -395,7 +420,7 @@ footer.wp-block-template-part,
 
 .ar-nav-pill-btn:hover {
     color: var(--ar-text-primary);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--ar-bg-card);
 }
 
 .ar-nav-pill-btn.active {
@@ -424,7 +449,7 @@ footer.wp-block-template-part,
 
 .ar-search-input {
     width: 100%;
-    background: var(--ar-bg-surface);
+    background: var(--ar-bg-card);
     border: 1px solid var(--ar-border-card);
     border-radius: var(--ar-radius-lg);
     padding: 12px 18px 12px 40px;
@@ -466,7 +491,7 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
-   Server Cards Grid (Clean Responsive Grid with Rounded Corners)
+   Server Cards Grid
    ========================================================================== */
 .ar-servers-grid {
     display: grid;
@@ -491,7 +516,7 @@ footer.wp-block-template-part,
 .ar-server-card:hover {
     border-color: var(--ar-primary);
     transform: translateY(-4px);
-    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), var(--ar-shadow-glow);
+    box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.15), var(--ar-shadow-glow);
 }
 
 .ar-server-card-top {
@@ -528,17 +553,16 @@ footer.wp-block-template-part,
 
 .ar-status-badge.active {
     background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
+    color: #10b981;
     border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .ar-status-badge.suspended {
     background: rgba(245, 158, 11, 0.15);
-    color: #fbbf24;
+    color: #d97706;
     border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-/* Spec Chips & Info Rows */
 .ar-spec-chips {
     display: flex;
     flex-wrap: wrap;
@@ -547,7 +571,7 @@ footer.wp-block-template-part,
 }
 
 .ar-chip {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--ar-bg-surface);
     border: 1px solid var(--ar-border-subtle);
     border-radius: var(--ar-radius-sm);
     padding: 5px 12px;
@@ -567,7 +591,7 @@ footer.wp-block-template-part,
     align-items: center;
     font-size: 13.5px;
     padding: 9px 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+    border-bottom: 1px dashed var(--ar-border-subtle);
     color: var(--ar-text-secondary);
 }
 
@@ -587,7 +611,6 @@ footer.wp-block-template-part,
     direction: rtl !important;
 }
 
-/* Card Action Buttons */
 .ar-card-actions {
     display: flex;
     gap: 10px;
@@ -595,7 +618,7 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
-   Enterprise Data Table (Alternative View)
+   Enterprise Data Table
    ========================================================================== */
 .ar-table-card {
     background: var(--ar-bg-card);
@@ -619,7 +642,7 @@ footer.wp-block-template-part,
 }
 
 .ar-enterprise-table th {
-    background: #090e15;
+    background: var(--ar-table-head-bg);
     color: var(--ar-text-muted);
     padding: 16px 22px;
     font-weight: 800;
@@ -629,18 +652,18 @@ footer.wp-block-template-part,
 
 .ar-enterprise-table td {
     padding: 16px 22px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--ar-border-subtle);
     color: var(--ar-text-secondary);
     vertical-align: middle;
 }
 
 .ar-enterprise-table tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--ar-bg-surface);
     color: var(--ar-text-primary);
 }
 
 /* ==========================================================================
-   Buttons & Interactive Elements (Rounded Luxury)
+   Buttons & Interactive Elements
    ========================================================================== */
 .ar-btn {
     display: inline-flex;
@@ -665,37 +688,37 @@ footer.wp-block-template-part,
 .ar-btn-primary:hover {
     background: var(--ar-primary-hover);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 186, 186, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 186, 186, 0.35);
 }
 
 .ar-btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--ar-bg-surface);
     color: var(--ar-text-primary);
     border: 1px solid var(--ar-border-card);
 }
 .ar-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--ar-bg-card);
+    border-color: var(--ar-border-active);
 }
 
 .ar-btn-danger {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
+    background: rgba(239, 68, 68, 0.12);
+    color: var(--ar-status-danger);
     border: 1px solid rgba(239, 68, 68, 0.3);
 }
 .ar-btn-danger:hover {
-    background: #ef4444;
+    background: var(--ar-status-danger);
     color: #ffffff;
     box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
 }
 
 .ar-btn-success {
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--ar-status-success);
     border: 1px solid rgba(16, 185, 129, 0.3);
 }
 .ar-btn-success:hover {
-    background: #10b981;
+    background: var(--ar-status-success);
     color: #ffffff;
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
 }
@@ -749,7 +772,7 @@ footer.wp-block-template-part,
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.88);
+    background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     display: flex;
@@ -767,13 +790,13 @@ footer.wp-block-template-part,
 }
 
 .ar-modal-box {
-    background: #0e141c;
+    background: var(--ar-bg-card);
     border: 1px solid var(--ar-border-card);
     border-radius: var(--ar-radius-2xl);
     width: 92%;
     max-width: 580px;
     padding: 32px;
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), var(--ar-shadow-glow);
+    box-shadow: var(--ar-shadow-card), var(--ar-shadow-glow);
 }
 
 .ar-terminal-screen {

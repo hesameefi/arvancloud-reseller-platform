@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ArvanCloud Reseller Pro - Clean Enterprise WP-Admin Design System
+   ArvanCloud Reseller Pro - Clean Enterprise WP-Admin Design System (Dual Theme)
    ========================================================================== */
 
 @font-face {
@@ -42,6 +42,7 @@
     margin: 20px 20px 0 0;
     max-width: 1560px;
     box-sizing: border-box;
+    transition: all 0.25s ease;
 }
 
 .arvan-admin-wrap * {
@@ -49,7 +50,7 @@
     font-family: inherit;
 }
 
-/* Header Area - High Contrast Deep Slate Typography */
+/* Header Area */
 .arvan-admin-header {
     display: flex;
     justify-content: space-between;
@@ -294,6 +295,74 @@
     border-color: #00baba !important;
     box-shadow: 0 0 0 3px rgba(0, 186, 186, 0.15) !important;
     outline: none !important;
+}
+
+/* ==========================================================================
+   Dark Theme Variant for WP Admin
+   ========================================================================== */
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-header {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-title h1 {
+    color: #ffffff !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-header p {
+    color: #94a3b8 !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-toolbar,
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-kpi-card,
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-card {
+    background: #131b26 !important;
+    border-color: #1e293b !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-card h2,
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-card h3 {
+    color: #ffffff !important;
+    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-kpi-title {
+    color: #94a3b8 !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-kpi-value {
+    color: #ffffff !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-btn-secondary,
+.arvan-admin-wrap[data-theme="dark"] .arvan-btn-admin-secondary {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-table {
+    background: transparent !important;
+    border-color: #1e293b !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-table th {
+    background: #090e15 !important;
+    color: #94a3b8 !important;
+    border-bottom-color: #1e293b !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-table td {
+    background: #131b26 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+    color: #cbd5e1 !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-table tr:hover td {
+    background: #182330 !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-input,
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-select {
+    background: #090d12 !important;
+    border-color: #1e293b !important;
+    color: #ffffff !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-form-group label {
+    color: #f1f5f9 !important;
+}
+.arvan-admin-wrap[data-theme="dark"] .arvan-admin-table code {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #38bdf8 !important;
 }
 
 @media (max-width: 1200px) {
