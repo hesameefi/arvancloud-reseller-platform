@@ -3,6 +3,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Enterprise Hourly Burn & 5-Stage Lifecycle Suspension Engine with Idempotency Locks
+ */
 class Arvan_Cron {
 
     private static $instance = null;
@@ -32,82 +35,93 @@ class Arvan_Cron {
     }
 
     /**
-     * Process Hourly Consumption for All Active Resources
+     * Process Hourly Consumption with Distributed Mutex Lock (Idempotent Execution)
      */
     public function process_hourly_consumption() {
+        // Prevent concurrent overlapping cron executions (Distributed Mutex Lock)
+        if (get_transient('arvan_cron_executing_lock')) {
+            return;
+        }
+        set_transient('arvan_cron_executing_lock', true, 45); // 45 seconds lock
+
         global $wpdb;
         $table_resources = $wpdb->prefix . 'arvan_resources';
         $table_wallets = $wpdb->prefix . 'arvan_wallets';
         $table_settlements = $wpdb->prefix . 'arvan_settlements';
 
-        $active_resources = $wpdb->get_results(
-            "SELECT * FROM {$table_resources} WHERE status IN ('ACTIVE', 'SUSPENDED')",
-            ARRAY_A
-        );
+        try {
+            $active_resources = $wpdb->get_results(
+                "SELECT * FROM {$table_resources} WHERE status IN ('ACTIVE', 'SUSPENDED')",
+                ARRAY_A
+            );
 
-        if (empty($active_resources)) {
-            return;
-        }
+            if (empty($active_resources)) {
+                delete_transient('arvan_cron_executing_lock');
+                return;
+            }
 
-        $wallet_mgr = Arvan_Wallet::get_instance();
-        $api_client = Arvan_API_Client::get_instance();
+            $wallet_mgr = Arvan_Wallet::get_instance();
+            $api_client = Arvan_API_Client::get_instance();
 
-        $total_burned = 0.00;
-        $total_provider_cost = 0.00;
-        $total_reseller_profit = 0.00;
-        $active_count = 0;
+            $total_burned = 0.00;
+            $total_provider_cost = 0.00;
+            $total_reseller_profit = 0.00;
+            $active_count = 0;
 
-        foreach ($active_resources as $res) {
-            $user_id = intval($res['user_id']);
-            $current_balance = $wallet_mgr->get_balance($user_id);
-            $hourly_customer = floatval($res['hourly_customer_price']);
-            $hourly_base = floatval($res['hourly_base_price']);
+            foreach ($active_resources as $res) {
+                $user_id = intval($res['user_id']);
+                $current_balance = $wallet_mgr->get_balance($user_id);
+                $hourly_customer = floatval($res['hourly_customer_price']);
+                $hourly_base = floatval($res['hourly_base_price']);
 
-            // 1. If Active, deduct hourly burn
-            if ($res['status'] === 'ACTIVE') {
-                if ($current_balance >= $hourly_customer) {
-                    $new_balance = $wallet_mgr->burn_hourly($user_id, $hourly_customer, $res['resource_id'], "مصرف ساعتی سرور {$res['name']}");
-                    
-                    $total_burned += $hourly_customer;
-                    $total_provider_cost += $hourly_base;
-                    $total_reseller_profit += ($hourly_customer - $hourly_base);
-                    $active_count++;
+                // 1. If Active, deduct hourly burn atomically
+                if ($res['status'] === 'ACTIVE') {
+                    if ($current_balance >= $hourly_customer) {
+                        $new_balance = $wallet_mgr->burn_hourly($user_id, $hourly_customer, $res['resource_id'], "مصرف ساعتی سرور {$res['name']}");
+                        
+                        $total_burned += $hourly_customer;
+                        $total_provider_cost += $hourly_base;
+                        $total_reseller_profit += ($hourly_customer - $hourly_base);
+                        $active_count++;
 
-                    // Check low balance threshold
-                    $wallet = $wallet_mgr->get_wallet($user_id);
-                    if ($new_balance <= floatval($wallet['warning_threshold'])) {
-                        $this->send_low_balance_alert($user_id, $new_balance);
+                        // Check low balance threshold
+                        $wallet = $wallet_mgr->get_wallet($user_id);
+                        if ($new_balance <= floatval($wallet['warning_threshold'])) {
+                            $this->send_low_balance_alert($user_id, $new_balance);
+                        }
+                    } else {
+                        // Balance reached 0: Execute Stage 1 & 2 Auto-Suspension & Power-Off
+                        $this->suspend_resource($res);
                     }
-                } else {
-                    // Balance reached 0: Execute Stage 1 & 2 Auto-Suspension & Power-Off
-                    $this->suspend_resource($res);
-                }
-            } 
-            // 2. If Suspended, check for 7-Day Termination Grace Period
-            elseif ($res['status'] === 'SUSPENDED') {
-                if (!empty($res['suspended_at'])) {
-                    $suspended_time = strtotime($res['suspended_at']);
-                    $days_suspended = (time() - $suspended_time) / (60 * 60 * 24);
+                } 
+                // 2. If Suspended, check for 7-Day Termination Grace Period
+                elseif ($res['status'] === 'SUSPENDED') {
+                    if (!empty($res['suspended_at'])) {
+                        $suspended_time = strtotime($res['suspended_at']);
+                        $days_suspended = (time() - $suspended_time) / (60 * 60 * 24);
 
-                    if ($days_suspended >= 7) {
-                        // 7 Days Expired: Execute Permanent Termination
-                        $this->terminate_resource($res);
+                        if ($days_suspended >= 7) {
+                            // 7 Days Expired: Execute Permanent Termination
+                            $this->terminate_resource($res);
+                        }
                     }
                 }
             }
-        }
 
-        // Record Settlement Summary Log
-        if ($total_burned > 0) {
-            $wpdb->insert($table_settlements, array(
-                'period_start' => date('Y-m-d H:00:00', strtotime('-1 hour')),
-                'period_end' => date('Y-m-d H:00:00'),
-                'total_burned_amount' => $total_burned,
-                'provider_base_cost' => $total_provider_cost,
-                'reseller_net_profit' => $total_reseller_profit,
-                'active_resources_count' => $active_count,
-                'created_at' => current_time('mysql')
-            ));
+            // Record Settlement Summary Log
+            if ($total_burned > 0) {
+                $wpdb->insert($table_settlements, array(
+                    'period_start' => date('Y-m-d H:00:00', strtotime('-1 hour')),
+                    'period_end' => date('Y-m-d H:00:00'),
+                    'total_burned_amount' => $total_burned,
+                    'provider_base_cost' => $total_provider_cost,
+                    'reseller_net_profit' => $total_reseller_profit,
+                    'active_resources_count' => $active_count,
+                    'created_at' => current_time('mysql')
+                ));
+            }
+        } finally {
+            delete_transient('arvan_cron_executing_lock');
         }
     }
 
@@ -175,7 +189,6 @@ class Arvan_Cron {
     }
 
     private function send_low_balance_alert($user_id, $balance) {
-        // Send email / internal alert
         $user = get_userdata($user_id);
         if ($user && $user->user_email) {
             $subject = 'هشدار کاهش موجودی حساب ابری ابر آروان';
