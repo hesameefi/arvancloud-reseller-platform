@@ -1,0 +1,461 @@
+/* Sorkhab Design System Theme for ArvanCloud Reseller - Enterprise Grade */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --ar-primary: #00baba;
+    --ar-primary-hover: #009b9b;
+    --ar-primary-light: #e6f7f7;
+    --ar-primary-dark: #004a4a;
+    
+    --ar-bg-page: #0d1217;
+    --ar-bg-dark: #131920;
+    --ar-surface-dark: #1a222b;
+    --ar-surface-card: #212b36;
+    --ar-border-dark: #2a3745;
+    
+    --ar-text-main: #f0f4f8;
+    --ar-text-muted: #8496a7;
+    
+    --ar-status-active: #10b981;
+    --ar-status-suspended: #f59e0b;
+    --ar-status-danger: #ef4444;
+    
+    --ar-radius-lg: 16px;
+    --ar-radius-md: 12px;
+    --ar-radius-sm: 8px;
+    --ar-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* Force dark background for entire page container */
+body.home, body.page-template-default, html {
+    background-color: var(--ar-bg-page) !important;
+}
+
+.wp-site-blocks, .entry-content, main {
+    background: transparent !important;
+}
+
+/* Hide default theme page title */
+.entry-title, .wp-block-post-title {
+    display: none !important;
+}
+
+.ar-sorkhab-container {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    direction: rtl;
+    text-align: right;
+    background: var(--ar-bg-dark);
+    color: var(--ar-text-main);
+    border-radius: var(--ar-radius-lg);
+    padding: 35px;
+    box-shadow: var(--ar-shadow);
+    margin: 30px auto;
+    max-width: 1200px;
+    border: 1px solid var(--ar-border-dark);
+    box-sizing: border-box;
+}
+
+.ar-sorkhab-container * {
+    box-sizing: border-box;
+}
+
+/* Header & Wallet Banner */
+.ar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--ar-border-dark);
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.ar-logo-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ar-logo-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--ar-primary), var(--ar-primary-dark));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 186, 186, 0.35);
+}
+
+.ar-logo-title h2 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--ar-text-main);
+}
+
+.ar-logo-title span {
+    font-size: 13px;
+    color: var(--ar-text-muted);
+}
+
+.ar-wallet-widget {
+    background: var(--ar-surface-dark);
+    border: 1px solid var(--ar-border-dark);
+    border-radius: var(--ar-radius-md);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.ar-wallet-balance-info span {
+    display: block;
+    font-size: 12px;
+    color: var(--ar-text-muted);
+    margin-bottom: 2px;
+}
+
+.ar-wallet-balance-info strong {
+    font-size: 22px;
+    color: var(--ar-primary);
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+/* Buttons */
+.ar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--ar-radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.ar-btn-primary {
+    background: var(--ar-primary);
+    color: #081118;
+}
+.ar-btn-primary:hover {
+    background: var(--ar-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 186, 186, 0.3);
+}
+
+.ar-btn-secondary {
+    background: var(--ar-surface-card);
+    color: var(--ar-text-main);
+    border: 1px solid var(--ar-border-dark);
+}
+.ar-btn-secondary:hover {
+    background: #2c3947;
+    border-color: #3b4d5f;
+}
+
+.ar-btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.ar-btn-danger:hover {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.ar-btn-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.ar-btn-success:hover {
+    background: #10b981;
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Tabs */
+.ar-tabs {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid var(--ar-border-dark);
+    margin-bottom: 30px;
+    padding-bottom: 4px;
+}
+
+.ar-tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 22px;
+    color: var(--ar-text-muted);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    border-radius: 8px 8px 0 0;
+}
+
+.ar-tab-btn:hover {
+    color: var(--ar-text-main);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.ar-tab-btn.active {
+    color: var(--ar-primary);
+    border-bottom-color: var(--ar-primary);
+    background: rgba(0, 186, 186, 0.08);
+}
+
+/* Card Grids */
+.ar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.ar-card {
+    background: var(--ar-surface-dark);
+    border: 1px solid var(--ar-border-dark);
+    border-radius: var(--ar-radius-md);
+    padding: 24px;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.ar-card:hover {
+    border-color: var(--ar-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.ar-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.ar-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.ar-badge-active {
+    background: rgba(16, 185, 129, 0.18);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.ar-badge-suspended {
+    background: rgba(245, 158, 11, 0.18);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.ar-spec-list {
+    margin: 18px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ar-spec-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+    color: var(--ar-text-muted);
+}
+
+.ar-spec-list li strong {
+    color: var(--ar-text-main);
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+.ar-price-tag {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--ar-primary);
+    margin: 15px 0;
+}
+
+/* Wizard Form */
+.ar-wizard-box {
+    background: var(--ar-surface-dark);
+    border: 1px solid var(--ar-border-dark);
+    border-radius: var(--ar-radius-md);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.ar-form-group {
+    margin-bottom: 22px;
+}
+
+.ar-form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--ar-text-main);
+}
+
+.ar-input, .ar-select {
+    width: 100%;
+    background: var(--ar-bg-dark);
+    border: 1px solid var(--ar-border-dark);
+    border-radius: var(--ar-radius-sm);
+    padding: 14px 16px;
+    color: white;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.ar-input:focus, .ar-select:focus {
+    outline: none;
+    border-color: var(--ar-primary);
+    box-shadow: 0 0 0 3px rgba(0, 186, 186, 0.15);
+}
+
+/* Tables */
+.ar-table-responsive {
+    overflow-x: auto;
+}
+
+.ar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.ar-table th, .ar-table td {
+    padding: 14px 18px;
+    text-align: right;
+    border-bottom: 1px solid var(--ar-border-dark);
+}
+
+.ar-table th {
+    background: var(--ar-surface-dark);
+    color: var(--ar-text-muted);
+    font-weight: 800;
+}
+
+.ar-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Modal */
+.ar-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.25s ease;
+}
+
+.ar-modal-backdrop.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.ar-modal {
+    background: var(--ar-surface-dark);
+    border: 1px solid var(--ar-border-dark);
+    border-radius: var(--ar-radius-md);
+    width: 92%;
+    max-width: 520px;
+    padding: 30px;
+    box-shadow: var(--ar-shadow);
+}
+
+/* Terminal Modal */
+.ar-terminal-window {
+    background: #080c10;
+    border: 1px solid #1c2633;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    direction: ltr;
+    text-align: left;
+    padding: 15px;
+    color: #4ade80;
+    font-size: 13px;
+    line-height: 1.6;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+/* Toast Alerts */
+.ar-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: var(--ar-surface-card);
+    border-right: 5px solid var(--ar-primary);
+    color: white;
+    padding: 16px 24px;
+    border-radius: var(--ar-radius-sm);
+    box-shadow: var(--ar-shadow);
+    z-index: 1000000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ar-toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .ar-sorkhab-container {
+        padding: 20px 15px;
+        margin: 10px auto;
+    }
+    .ar-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .ar-wallet-widget {
+        justify-content: space-between;
+    }
+    .ar-grid {
+        grid-template-columns: 1fr;
+    }
+    .ar-tabs {
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+}

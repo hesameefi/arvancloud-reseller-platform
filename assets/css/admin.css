@@ -1,0 +1,10 @@
+/* Arvan Reseller Admin Styles */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap');
+
+.wrap {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.wp-list-table th, .wp-list-table td {
+    vertical-align: middle !important;
+}
