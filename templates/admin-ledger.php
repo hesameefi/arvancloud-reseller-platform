@@ -7,10 +7,10 @@ if (!defined('ABSPATH')) {
     <!-- Header -->
     <div class="arvan-admin-header">
         <div class="arvan-admin-title">
-            <span style="font-size: 28px;">📜</span>
+            <span style="font-size: 32px;">📜</span>
             <div>
                 <h1>دفتر کل تراکنش‌های مالی سیستم (Double-Entry Ledger)</h1>
-                <span style="font-size: 12.5px; color: #94a3b8;">ثبت دقیق و غیرقابل دستکاری تراکنش‌های شارژ کیف پول و کسر مصرف ساعتی بر اساس استانداردهای حسابداری دوطرفه.</span>
+                <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b; font-weight: 500;">ثبت دقیق و غیرقابل دستکاری تراکنش‌های شارژ کیف پول و کسر مصرف ساعتی بر اساس استانداردهای حسابداری دوطرفه.</p>
             </div>
         </div>
         <div>
@@ -48,26 +48,26 @@ if (!defined('ABSPATH')) {
                             $is_deposit = ($t['type'] === 'DEPOSIT');
                         ?>
                             <tr>
-                                <td><span style="color: #64748b; font-family: 'JetBrains Mono', monospace;">#<?php echo esc_html($t['id']); ?></span></td>
-                                <td>کیف پول #<?php echo esc_html($t['wallet_id']); ?></td>
-                                <td>کاربر #<?php echo esc_html($t['user_id']); ?></td>
-                                <td>
+                                <td><span style="color: #64748b; font-weight: 700;">#<?php echo esc_html($t['id']); ?></span></td>
+                                <td style="white-space: nowrap; font-weight: 700; color: #334155;">کیف پول #<?php echo esc_html($t['wallet_id']); ?></td>
+                                <td style="white-space: nowrap; font-weight: 700; color: #334155;">کاربر #<?php echo esc_html($t['user_id']); ?></td>
+                                <td style="white-space: nowrap;">
                                     <?php if ($is_deposit): ?>
-                                        <span style="color: #10b981; font-weight: 800; background: rgba(16, 185, 129, 0.15); padding: 3px 8px; border-radius: 4px;">➕ شارژ کیف پول</span>
+                                        <span style="color: #15803d; font-weight: 800; background: #dcfce7; border: 1px solid #bbf7d0; padding: 4px 10px; border-radius: 20px; font-size: 12px;">➕ شارژ کیف پول</span>
                                     <?php else: ?>
-                                        <span style="color: #ef4444; font-weight: 800; background: rgba(239, 68, 68, 0.15); padding: 3px 8px; border-radius: 4px;">➖ کسر مصرف ساعتی</span>
+                                        <span style="color: #b91c1c; font-weight: 800; background: #fee2e2; border: 1px solid #fecaca; padding: 4px 10px; border-radius: 20px; font-size: 12px;">➖ کسر مصرف ساعتی</span>
                                     <?php endif; ?>
                                 </td>
-                                <td>
-                                    <strong style="color: <?php echo $is_deposit ? '#10b981' : '#ef4444'; ?>; font-family: 'JetBrains Mono', monospace;">
+                                <td style="white-space: nowrap;">
+                                    <strong style="color: <?php echo $is_deposit ? '#15803d' : '#b91c1c'; ?>; font-weight: 900; font-size: 14px;">
                                         <?php echo ($is_deposit ? '+' : '') . number_format(floatval($t['amount'])); ?> تومان
                                     </strong>
                                 </td>
-                                <td style="font-family: 'JetBrains Mono', monospace;"><?php echo number_format(floatval($t['balance_before'])); ?> تومان</td>
-                                <td><strong style="color: #f8fafc; font-family: 'JetBrains Mono', monospace;"><?php echo number_format(floatval($t['balance_after'])); ?> تومان</strong></td>
-                                <td><code><?php echo esc_html($t['reference_id']); ?></code></td>
-                                <td><?php echo esc_html($t['description']); ?></td>
-                                <td dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8;"><?php echo esc_html($t['created_at']); ?></td>
+                                <td style="white-space: nowrap; color: #475569; font-weight: 600;"><?php echo number_format(floatval($t['balance_before'])); ?> تومان</td>
+                                <td style="white-space: nowrap;"><strong style="color: #0f172a; font-weight: 800;"><?php echo number_format(floatval($t['balance_after'])); ?> تومان</strong></td>
+                                <td style="white-space: nowrap;"><code><?php echo esc_html($t['reference_id']); ?></code></td>
+                                <td style="color: #1e293b; font-weight: 600;"><?php echo esc_html($t['description']); ?></td>
+                                <td dir="ltr" style="white-space: nowrap; font-size: 12.5px; color: #64748b; font-weight: 600;"><?php echo esc_html($t['created_at']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

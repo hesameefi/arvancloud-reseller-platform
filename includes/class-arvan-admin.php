@@ -67,9 +67,11 @@ class Arvan_Admin {
     }
 
     public function enqueue_admin_assets($hook) {
-        if (strpos($hook, 'arvan-reseller') !== false) {
-            wp_enqueue_style('arvan-admin-css', ARVAN_RESELLER_URL . 'assets/css/admin.css', array(), ARVAN_RESELLER_VERSION);
-            wp_enqueue_script('arvan-admin-js', ARVAN_RESELLER_URL . 'assets/js/admin.js', array('jquery'), ARVAN_RESELLER_VERSION, true);
+        $page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
+        if (strpos($page, 'arvan-reseller') !== false || strpos($hook, 'arvan-reseller') !== false) {
+            $ver = time(); // Force cache-busting
+            wp_enqueue_style('arvan-admin-css', ARVAN_RESELLER_URL . 'assets/css/admin.css', array(), $ver);
+            wp_enqueue_script('arvan-admin-js', ARVAN_RESELLER_URL . 'assets/js/admin.js', array('jquery'), $ver, true);
             wp_localize_script('arvan-admin-js', 'ArvanAdmin', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('arvan_admin_nonce')
