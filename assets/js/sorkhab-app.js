@@ -2,11 +2,13 @@
     'use strict';
 
     $(document).ready(function() {
-        // Tab Switching
-        $('.ar-tab-btn').on('click', function() {
+        // Tab Navigation Switching
+        $(document).on('click', '.ar-nav-pill-btn, .ar-tab-btn', function() {
             var target = $(this).data('tab');
-            $('.ar-tab-btn').removeClass('active');
-            $(this).addClass('active');
+            if (!target) return;
+
+            $('.ar-nav-pill-btn').removeClass('active');
+            $('.ar-nav-pill-btn[data-tab="' + target + '"]').addClass('active');
 
             $('.ar-tab-content').hide();
             $('#' + target).fadeIn(200);
@@ -114,11 +116,11 @@
         });
 
         // Deposit Modal Open / Close
-        $('#ar_open_deposit_modal').on('click', function() {
+        $(document).on('click', '#ar_open_deposit_modal', function() {
             $('#ar_deposit_modal').addClass('active');
         });
 
-        $('.ar-close-modal').on('click', function() {
+        $(document).on('click', '.ar-close-modal', function() {
             $('.ar-modal-backdrop').removeClass('active');
         });
 
@@ -135,11 +137,11 @@
                 nonce: ArvanApp.nonce,
                 amount: amount
             }, function(res) {
-                $btn.prop('disabled', false).html('پرداخت آنلاین و شارژ آنی');
+                $btn.prop('disabled', false).html('پرداخت آنلاین و افزایش آنی موجودی');
                 if (res.success) {
                     showToast(res.data.message, 'success');
                     $('#ar_deposit_modal').removeClass('active');
-                    $('#ar_wallet_balance_display').text(res.data.new_balance.toLocaleString('fa-IR') + ' تومان');
+                    $('#ar_wallet_balance_display').html(res.data.new_balance.toLocaleString('fa-IR') + ' <small style="font-size: 11px; font-weight: normal; color: var(--ar-text-secondary);">تومان</small>');
                     setTimeout(function() {
                         location.reload();
                     }, 1000);
@@ -147,7 +149,7 @@
                     showToast(res.data, 'error');
                 }
             }).fail(function() {
-                $btn.prop('disabled', false).html('پرداخت آنلاین و شارژ آنی');
+                $btn.prop('disabled', false).html('پرداخت آنلاین و افزایش آنی موجودی');
                 showToast('خطا در شارژ کیف پول.', 'error');
             });
         });
@@ -156,15 +158,15 @@
         function showToast(msg, type) {
             var $toast = $('#ar_toast_notification');
             if ($toast.length === 0) {
-                $toast = $('<div id="ar_toast_notification" class="ar-toast"></div>').appendTo('body');
+                $toast = $('<div id="ar_toast_notification" class="ar-toast" style="position: fixed; bottom: 30px; left: 30px; background: #141c26; border-right: 4px solid var(--ar-primary); color: white; padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 1000000; font-size: 13.5px; font-weight: 700; display: none;"></div>').appendTo('body');
             }
 
-            var borderColor = (type === 'success') ? 'var(--ar-status-active)' : 'var(--ar-status-danger)';
-            $toast.css('border-right-color', borderColor).text(msg).addClass('show');
+            var borderColor = (type === 'success') ? '#10b981' : '#ef4444';
+            $toast.css('border-right-color', borderColor).text(msg).fadeIn(200);
 
             setTimeout(function() {
-                $toast.removeClass('show');
-            }, 4000);
+                $toast.fadeOut(300);
+            }, 3500);
         }
     });
 
