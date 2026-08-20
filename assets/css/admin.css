@@ -1,10 +1,291 @@
-/* Arvan Reseller Admin Styles */
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap');
+/* ==========================================================================
+   ArvanCloud Reseller Pro - Luxury Admin Dashboard Design System
+   ========================================================================== */
 
-.wrap {
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* Scope styling strictly to Arvan pages */
+.toplevel_page_arvan-reseller,
+.arvan-reseller_page_arvan-reseller-settings,
+.arvan-reseller_page_arvan-reseller-ledger {
+    background: #090d12 !important;
+    color: #f1f5f9 !important;
     font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
-.wp-list-table th, .wp-list-table td {
+.toplevel_page_arvan-reseller #wpbody-content,
+.arvan-reseller_page_arvan-reseller-settings #wpbody-content,
+.arvan-reseller_page_arvan-reseller-ledger #wpbody-content {
+    padding-bottom: 60px;
+}
+
+.arvan-admin-wrap {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    direction: rtl;
+    text-align: right;
+    margin: 20px 20px 0 0;
+    max-width: 1480px;
+    box-sizing: border-box;
+}
+
+.arvan-admin-wrap * {
+    box-sizing: border-box;
+}
+
+/* Header Area */
+.arvan-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.arvan-admin-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.arvan-admin-title h1 {
+    margin: 0 !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.arvan-version-badge {
+    background: linear-gradient(135deg, #00baba, #087373);
+    color: #06090e;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 186, 186, 0.3);
+}
+
+/* Luxury Toolbar Card */
+.arvan-admin-toolbar {
+    background: #121822;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 16px 22px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.arvan-admin-toolbar .arvan-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.arvan-btn-admin {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    font-family: inherit;
+    text-decoration: none;
+}
+
+.arvan-btn-admin-primary {
+    background: #00baba;
+    color: #06090e;
+    border-color: #00baba;
+}
+.arvan-btn-admin-primary:hover {
+    background: #00d6d6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 186, 186, 0.4);
+}
+
+.arvan-btn-admin-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+    border-color: #334155;
+}
+.arvan-btn-admin-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #475569;
+}
+
+.arvan-btn-admin-danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+.arvan-btn-admin-danger:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+/* KPI Bento Stats Grid */
+.arvan-admin-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.arvan-admin-kpi-card {
+    background: #121822;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.arvan-admin-kpi-card:hover {
+    transform: translateY(-3px);
+    border-color: #00baba;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 186, 186, 0.15);
+}
+
+.arvan-admin-kpi-title {
+    color: #94a3b8;
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.arvan-admin-kpi-value {
+    font-size: 24px;
+    font-weight: 900;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', 'Vazirmatn', monospace;
+}
+
+.arvan-admin-kpi-sub {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Admin Card Container */
+.arvan-admin-card {
+    background: #121822;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    margin-bottom: 28px;
+}
+
+.arvan-admin-card h2, .arvan-admin-card h3 {
+    margin: 0 0 18px 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 12px;
+}
+
+/* Dark Enterprise Tables */
+.arvan-admin-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 13px !important;
+}
+
+.arvan-admin-table th {
+    background: #0a0f15 !important;
+    color: #94a3b8 !important;
+    font-weight: 800 !important;
+    padding: 14px 16px !important;
+    border-bottom: 1px solid #1e293b !important;
+    border-top: none !important;
+    text-align: right !important;
+}
+
+.arvan-admin-table td {
+    padding: 14px 16px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    color: #cbd5e1 !important;
     vertical-align: middle !important;
+    background: transparent !important;
+}
+
+.arvan-admin-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #ffffff !important;
+}
+
+.arvan-admin-table code {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #38bdf8 !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px !important;
+}
+
+/* Form Groups */
+.arvan-admin-form-group {
+    margin-bottom: 20px;
+}
+
+.arvan-admin-form-group label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.arvan-admin-input, .arvan-admin-select {
+    width: 100%;
+    background: #090d12 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 6px !important;
+    padding: 10px 14px !important;
+    color: #ffffff !important;
+    font-family: inherit !important;
+    font-size: 13.5px !important;
+}
+
+.arvan-admin-input:focus, .arvan-admin-select:focus {
+    border-color: #00baba !important;
+    box-shadow: 0 0 0 2px rgba(0, 186, 186, 0.2) !important;
+    outline: none !important;
+}
+
+@media (max-width: 1100px) {
+    .arvan-admin-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .arvan-admin-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    .arvan-admin-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
