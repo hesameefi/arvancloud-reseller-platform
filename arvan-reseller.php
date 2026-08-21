@@ -19,10 +19,14 @@ define('ARVAN_RESELLER_PATH', plugin_dir_path(__FILE__));
 define('ARVAN_RESELLER_URL', plugin_dir_url(__FILE__));
 
 // Autoload Includes
+require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-security.php';
+require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-rate-limiter.php';
 require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-db.php';
 require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-api-client.php';
 require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-wallet.php';
 require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-cron.php';
+require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-ai-rag.php';
+require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-ai-agent.php';
 require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-admin.php';
 require_once ARVAN_RESELLER_PATH . 'includes/class-arvan-frontend.php';
 
@@ -52,10 +56,13 @@ class Arvan_Reseller_Plugin {
     }
 
     public function init() {
+        Arvan_Rate_Limiter::get_instance();
         Arvan_DB::get_instance();
         Arvan_API_Client::get_instance();
         Arvan_Wallet::get_instance();
         Arvan_Cron::get_instance();
+        Arvan_AI_RAG::get_instance();
+        Arvan_AI_Agent::get_instance();
         Arvan_Admin::get_instance();
         Arvan_Frontend::get_instance();
     }

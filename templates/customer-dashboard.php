@@ -18,220 +18,261 @@ foreach ($user_servers as $srv) {
 
 $runway_hours = ($total_hourly_burn > 0) ? round($balance_num / $total_hourly_burn) : 999;
 $runway_days = round($runway_hours / 24, 1);
+
+// Telemetry & Rate Limiting Status
+$telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
 ?>
 
 <div class="ar-saas-layout" id="arvan_dashboard_app">
-    <!-- Top Enterprise Navbar -->
-    <header class="ar-top-navbar">
-        <div class="ar-brand-group">
+    <!-- Right Sidebar (سایدبار عمودی راست با طراحی داشبوردی سرخ‌آب) -->
+    <aside class="ar-sidebar" id="ar_sidebar">
+        <div class="ar-sidebar-brand">
             <div class="ar-brand-logo">☁️</div>
-            <div class="ar-brand-info">
-                <h1>کنسول خدمات ابری ابر آروان</h1>
-                <span><span class="ar-pulse-dot"></span> شبکه ابری لایو (۴ دیتاسنتر متصل)</span>
+            <div class="ar-brand-text">
+                <h2>سرخ‌آب کلاود</h2>
+                <span>ریسلر اختصاصی ابر آروان</span>
             </div>
         </div>
 
-        <div class="ar-navbar-actions">
-            <!-- Theme Toggle Switcher -->
-            <button type="button" class="ar-btn ar-btn-secondary" id="ar_theme_toggle_btn" style="padding: 7px 16px; font-size: 13px; border-radius: 20px;">
-                ☀️ تم روشن
+        <!-- Wallet Quick Widget in Sidebar -->
+        <div class="ar-sidebar-wallet-card">
+            <div class="ar-sidebar-wallet-label">موجودی کیف پول پیش‌پرداخت</div>
+            <div class="ar-sidebar-wallet-val" id="ar_sidebar_balance"><?php echo number_format($balance_num); ?> <small>تومان</small></div>
+            <button type="button" class="ar-btn ar-btn-primary ar-btn-block" id="ar_sidebar_open_deposit" onclick="document.getElementById('ar_open_deposit_modal').click();">
+                ➕ افزایش اعتبار
             </button>
-
-            <!-- Live Wallet Pill -->
-            <div class="ar-wallet-pill">
-                <div class="ar-wallet-meta">
-                    <div class="ar-wallet-meta-title">اعتبار پیش‌پرداخت کیف پول</div>
-                    <div class="ar-wallet-meta-value" id="ar_wallet_balance_display"><?php echo number_format($balance_num); ?> <small style="font-size: 11px; font-weight: normal; color: var(--ar-text-secondary);">تومان</small></div>
-                </div>
-                <button type="button" class="ar-btn ar-btn-primary" id="ar_open_deposit_modal" style="padding: 7px 14px; font-size: 13px;">
-                    ➕ افزایش اعتبار
-                </button>
-            </div>
         </div>
-    </header>
 
-    <!-- Main Content Container -->
-    <main class="ar-main-content">
-        <!-- Low Balance Warning Banner -->
-        <?php if ($is_low_balance): ?>
-            <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--ar-radius-md); padding: 14px 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 22px;">⚠️</span>
-                    <div>
-                        <div style="font-size: 14px; font-weight: 800; color: #fbbf24;">هشدار کسری موجودی حساب ابری</div>
-                        <div style="font-size: 12.5px; color: var(--ar-text-secondary);">موجودی شما کمتر از ۵۰,۰۰۰ تومان است. جهت جلوگیری از خاموش شدن خودکار سرورها، حساب خود را شارژ نمایید.</div>
-                    </div>
-                </div>
-                <button type="button" class="ar-btn ar-btn-primary" style="padding: 7px 16px; font-size: 13px;" onclick="document.getElementById('ar_open_deposit_modal').click();">
-                    شارژ فوری کیف پول
-                </button>
-            </div>
-        <?php endif; ?>
-
-        <!-- Bento Metrics Dashboard (4 KPI Tiles) -->
-        <section class="ar-bento-grid">
-            <div class="ar-bento-card">
-                <div class="ar-bento-icon" style="color: #38bdf8;">🖥️</div>
-                <div class="ar-bento-data">
-                    <div class="ar-bento-title">ابرک‌های ابری فعال</div>
-                    <div class="ar-bento-value"><?php echo $active_servers_count; ?> <span style="font-size: 13px; font-weight: normal; color: var(--ar-text-muted);">از <?php echo count($user_servers); ?> سرور</span></div>
-                    <div class="ar-bento-sub" style="color: var(--ar-status-success);">● ۱۰۰٪ وضعیت نرمال و آنلاین</div>
-                </div>
-            </div>
-
-            <div class="ar-bento-card">
-                <div class="ar-bento-icon" style="color: #f43f5e;">⚡</div>
-                <div class="ar-bento-data">
-                    <div class="ar-bento-title">مجموع مصرف ساعتی (Burn Rate)</div>
-                    <div class="ar-bento-value"><?php echo number_format($total_hourly_burn); ?> <span style="font-size: 12px; font-weight: normal; color: var(--ar-text-muted);">تومان/ساعت</span></div>
-                    <div class="ar-bento-sub">کسر خودکار بر اساس ثانیه مصرف</div>
-                </div>
-            </div>
-
-            <div class="ar-bento-card">
-                <div class="ar-bento-icon" style="color: #10b981;">💳</div>
-                <div class="ar-bento-data">
-                    <div class="ar-bento-title">موجودی در دسترس</div>
-                    <div class="ar-bento-value" style="color: var(--ar-primary);"><?php echo number_format($balance_num); ?> <span style="font-size: 12px; font-weight: normal; color: var(--ar-text-muted);">تومان</span></div>
-                    <div class="ar-bento-sub">کیف پول پیش‌پرداخت ارزی-ریالی</div>
-                </div>
-            </div>
-
-            <div class="ar-bento-card">
-                <div class="ar-bento-icon" style="color: #a855f7;">⏳</div>
-                <div class="ar-bento-data">
-                    <div class="ar-bento-title">مدت زمان بقای سرویس (Runway)</div>
-                    <div class="ar-bento-value"><?php echo ($total_hourly_burn > 0) ? ($runway_hours . ' <small style="font-size: 13px; font-weight: normal;">ساعت</small>') : 'نامحدود'; ?></div>
-                    <div class="ar-bento-sub"><?php echo ($total_hourly_burn > 0) ? ("تقریباً {$runway_days} روز کاری") : 'بدون مصرف ساعتی فعال'; ?></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Segmented Luxury Navigation Tabs -->
-        <nav class="ar-nav-pills">
-            <button type="button" class="ar-nav-pill-btn active" data-tab="tab_my_servers">
-                <span>🖥️</span> سرورهای ابری من (<?php echo count($user_servers); ?>)
+        <!-- Vertical Dashboard Menu Items -->
+        <nav class="ar-sidebar-nav">
+            <button type="button" class="ar-sidebar-nav-item active" data-tab="tab_my_servers">
+                <span class="ar-nav-icon">🖥️</span>
+                <span class="ar-nav-title">سرورهای ابری من</span>
+                <span class="ar-nav-badge"><?php echo count($user_servers); ?></span>
             </button>
-            <button type="button" class="ar-nav-pill-btn" data-tab="tab_create_server">
-                <span>🚀</span> راه‌اندازی سرور ابری جدید
+            <button type="button" class="ar-sidebar-nav-item" data-tab="tab_create_server">
+                <span class="ar-nav-icon">🚀</span>
+                <span class="ar-nav-title">راه‌اندازی ابرک جدید</span>
+                <span class="ar-nav-badge pulse">آنلاین</span>
             </button>
-            <button type="button" class="ar-nav-pill-btn" data-tab="tab_cdn_storage">
-                <span>🌐</span> CDN و آبجکت استوریج S3
+            <button type="button" class="ar-sidebar-nav-item" data-tab="tab_cdn_storage">
+                <span class="ar-nav-icon">🌐</span>
+                <span class="ar-nav-title">CDN و آبجکت استوریج S3</span>
             </button>
-            <button type="button" class="ar-nav-pill-btn" data-tab="tab_ai_advisor">
-                <span>🤖</span> مشاور هوش مصنوعی انتخاب پلن
+            <button type="button" class="ar-sidebar-nav-item" data-tab="tab_ai_advisor">
+                <span class="ar-nav-icon">🤖</span>
+                <span class="ar-nav-title">مشاور هوش مصنوعی پلن</span>
+                <span class="ar-nav-badge ai">AI</span>
             </button>
-            <button type="button" class="ar-nav-pill-btn" data-tab="tab_wallet_history">
-                <span>📜</span> دفتر کل مالی و تراکنش‌ها
+            <button type="button" class="ar-sidebar-nav-item" data-tab="tab_wallet_history">
+                <span class="ar-nav-icon">📜</span>
+                <span class="ar-nav-title">دفتر کل مالی و تراکنش‌ها</span>
+            </button>
+            <button type="button" class="ar-sidebar-nav-item" data-tab="tab_rate_limit_health">
+                <span class="ar-nav-icon">⚡</span>
+                <span class="ar-nav-title">وضعیت ریت‌لیمیت و سلامت API</span>
             </button>
         </nav>
 
-        <!-- Tab 1: My Cloud Servers -->
-        <div id="tab_my_servers" class="ar-tab-content">
-            <!-- View Controls Toolbar -->
-            <div class="ar-view-toolbar">
-                <div class="ar-search-box">
-                    <input type="text" id="ar_server_search" class="ar-search-input" placeholder="🔍 جستجوی سریع بر اساس نام سرور، IP، یا دیتاسنتر...">
-                </div>
+        <!-- Sidebar Footer Status -->
+        <div class="ar-sidebar-footer">
+            <div class="ar-region-status">
+                <span class="ar-pulse-dot"></span> دیتاسنترهای تهران و تبریز لایو
+            </div>
+            <button type="button" class="ar-theme-toggle-sidebar" id="ar_theme_toggle_btn">
+                ☀️ تم روشن
+            </button>
+        </div>
+    </aside>
 
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="ar-view-toggle">
-                        <button type="button" class="ar-view-btn active" id="ar_btn_grid_view" onclick="switchServerView('grid');">⊞ نمای شبکه‌ای</button>
-                        <button type="button" class="ar-view-btn" id="ar_btn_table_view" onclick="switchServerView('table');">☰ نمای جدولی</button>
-                    </div>
-
-                    <button type="button" class="ar-btn ar-btn-primary ar-tab-btn" data-tab="tab_create_server" style="padding: 8px 16px;">
-                        ➕ سرور جدید
-                    </button>
-                </div>
+    <!-- Main Viewport Area (سمت چپ) -->
+    <div class="ar-main-viewport">
+        <!-- Top Navbar -->
+        <header class="ar-top-navbar">
+            <div class="ar-top-breadcrumb">
+                <button type="button" class="ar-mobile-toggle" id="ar_mobile_toggle" title="منو">☰</button>
+                <span style="color: var(--ar-text-muted);">کنسول ابری /</span>
+                <strong id="ar_active_page_title" style="color: var(--ar-text-main);">سرورهای ابری من</strong>
             </div>
 
-            <?php if (empty($user_servers)): ?>
-                <div class="ar-form-card" style="text-align: center; padding: 60px 20px;">
-                    <div style="font-size: 54px; margin-bottom: 16px;">🌩️</div>
-                    <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px 0;">شما هنوز هیچ سرور ابری راه‌اندازی نکرده‌اید</h3>
-                    <p style="color: var(--ar-text-secondary); margin-bottom: 25px; font-size: 14px;">با چند کلیک، ابرک اختصاصی با دیسک پرسرعت NVMe و ترافیک نامحدود بسازید.</p>
-                    <button type="button" class="ar-btn ar-btn-primary ar-tab-btn" data-tab="tab_create_server" style="padding: 12px 24px;">
-                        🚀 ایجاد اولین سرور ابری
+            <div class="ar-top-actions">
+                <div class="ar-burn-rate-badge">
+                    <span>⚡ مصرف ساعتی: <strong><?php echo number_format($total_hourly_burn); ?> تومان/ساعت</strong></span>
+                </div>
+                <button type="button" class="ar-btn ar-btn-primary" id="ar_open_deposit_modal" style="padding: 7px 14px; font-size: 13px;">
+                    💳 شارژ حساب
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="ar-main-content">
+            <!-- Low Balance Warning Banner -->
+            <?php if ($is_low_balance): ?>
+                <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--ar-radius-md); padding: 14px 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="font-size: 22px;">⚠️</span>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 800; color: #fbbf24;">هشدار کسری موجودی حساب ابری</div>
+                            <div style="font-size: 12.5px; color: var(--ar-text-secondary);">موجودی شما کمتر از ۵۰,۰۰۰ تومان است. جهت جلوگیری از خاموش شدن خودکار سرورها، حساب خود را شارژ نمایید.</div>
+                        </div>
+                    </div>
+                    <button type="button" class="ar-btn ar-btn-primary" style="padding: 7px 16px; font-size: 13px;" onclick="document.getElementById('ar_open_deposit_modal').click();">
+                        شارژ فوری کیف پول
                     </button>
                 </div>
-            <?php else: ?>
-                <!-- Grid View -->
-                <div id="ar_servers_grid_container" class="ar-servers-grid">
-                    <?php foreach ($user_servers as $srv): 
-                        $is_active = ($srv['status'] === 'ACTIVE');
-                        $specs = json_decode($srv['specs'], true) ?: array();
-                        
-                        $flag = '🇮🇷';
-                        $loc_title = 'تهران - عارف';
-                        if ($srv['region'] === 'ir-tbz-dc1') { $flag = '🇮🇷'; $loc_title = 'تبریز - شهریار'; }
-                        elseif ($srv['region'] === 'nl-ams-1') { $flag = '🇳🇱'; $loc_title = 'هلند - آمستردام'; }
-                    ?>
-                        <div class="ar-server-card" data-server-name="<?php echo esc_attr(strtolower($srv['name'])); ?>" data-server-ip="<?php echo esc_attr($srv['ip_address']); ?>" data-server-region="<?php echo esc_attr(strtolower($srv['region'])); ?>">
-                            <div>
-                                <div class="ar-server-card-top">
-                                    <div class="ar-server-title">
-                                        <h3><?php echo esc_html($srv['name']); ?></h3>
-                                        <div class="ar-server-region"><?php echo $flag . ' ' . esc_html($loc_title); ?> (<code><?php echo esc_html($srv['region']); ?></code>)</div>
-                                    </div>
-                                    <span class="ar-status-badge <?php echo $is_active ? 'active' : 'suspended'; ?>">
-                                        <?php if ($is_active): ?>
-                                            <span class="ar-pulse-dot" style="width: 6px; height: 6px;"></span> روشن و فعال
-                                        <?php else: ?>
-                                            ⏸ خاموش (Suspended)
-                                        <?php endif; ?>
-                                    </span>
-                                </div>
+            <?php endif; ?>
 
-                                <!-- Spec Chips -->
-                                <div class="ar-spec-chips">
-                                    <span class="ar-chip">⚡ <?php echo esc_html($srv['flavor_name']); ?></span>
-                                    <span class="ar-chip">💾 NVMe Storage</span>
-                                    <span class="ar-chip">🔒 DDoS Protected</span>
-                                </div>
-
-                                <ul class="ar-server-meta-list">
-                                    <li>
-                                        <span>آدرس آی‌پی عمومی (IP):</span>
-                                        <strong><?php echo esc_html($srv['ip_address']); ?></strong>
-                                    </li>
-                                    <li>
-                                        <span>نرخ تعرفه ساعتی:</span>
-                                        <strong class="ar-server-price"><?php echo number_format(floatval($srv['hourly_customer_price'])); ?> تومان / ساعت</strong>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="ar-card-actions">
-                                <?php if ($is_active): ?>
-                                    <button type="button" class="ar-btn ar-btn-danger ar-toggle-power-btn" data-resource-id="<?php echo esc_attr($srv['resource_id']); ?>" data-action="power-off" style="flex: 1;">
-                                        🛑 خاموش کردن
-                                    </button>
-                                <?php else: ?>
-                                    <button type="button" class="ar-btn ar-btn-success ar-toggle-power-btn" data-resource-id="<?php echo esc_attr($srv['resource_id']); ?>" data-action="power-on" style="flex: 1;">
-                                        ⚡ روشن کردن
-                                    </button>
-                                <?php endif; ?>
-                                <button type="button" class="ar-btn ar-btn-secondary ar-open-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" style="padding: 9px 14px;" title="باز کردن شبیه‌ساز ترمینال SSH">
-                                    💻 کنسول وب
-                                </button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+            <!-- Bento Metrics Dashboard (4 KPI Tiles) -->
+            <section class="ar-bento-grid">
+                <div class="ar-bento-card">
+                    <div class="ar-bento-icon" style="color: #38bdf8;">🖥️</div>
+                    <div class="ar-bento-data">
+                        <div class="ar-bento-title">ابرک‌های ابری فعال</div>
+                        <div class="ar-bento-value"><?php echo $active_servers_count; ?> <span style="font-size: 13px; font-weight: normal; color: var(--ar-text-muted);">از <?php echo count($user_servers); ?> سرور</span></div>
+                        <div class="ar-bento-sub" style="color: var(--ar-status-success);">● ۱۰۰٪ وضعیت نرمال و آنلاین</div>
+                    </div>
                 </div>
 
-                <!-- Table View (Hidden by Default) -->
-                <div id="ar_servers_table_container" class="ar-table-card" style="display: none;">
-                    <div class="ar-table-responsive">
-                        <table class="ar-enterprise-table" id="ar_servers_table">
+                <div class="ar-bento-card">
+                    <div class="ar-bento-icon" style="color: #f43f5e;">⚡</div>
+                    <div class="ar-bento-data">
+                        <div class="ar-bento-title">مجموع مصرف ساعتی (Burn Rate)</div>
+                        <div class="ar-bento-value"><?php echo number_format($total_hourly_burn); ?> <span style="font-size: 12px; font-weight: normal; color: var(--ar-text-muted);">تومان/ساعت</span></div>
+                        <div class="ar-bento-sub">کسر خودکار بر اساس ثانیه مصرف</div>
+                    </div>
+                </div>
+
+                <div class="ar-bento-card">
+                    <div class="ar-bento-icon" style="color: #10b981;">💳</div>
+                    <div class="ar-bento-data">
+                        <div class="ar-bento-title">موجودی در دسترس</div>
+                        <div class="ar-bento-value" style="color: var(--ar-primary);"><?php echo number_format($balance_num); ?> <span style="font-size: 12px; font-weight: normal; color: var(--ar-text-muted);">تومان</span></div>
+                        <div class="ar-bento-sub">کیف پول پیش‌پرداخت ارزی-ریالی</div>
+                    </div>
+                </div>
+
+                <div class="ar-bento-card">
+                    <div class="ar-bento-icon" style="color: #a855f7;">⏳</div>
+                    <div class="ar-bento-data">
+                        <div class="ar-bento-title">مدت زمان بقای سرویس (Runway)</div>
+                        <div class="ar-bento-value"><?php echo ($total_hourly_burn > 0) ? ($runway_hours . ' <small style="font-size: 13px; font-weight: normal;">ساعت</small>') : 'نامحدود'; ?></div>
+                        <div class="ar-bento-sub"><?php echo ($total_hourly_burn > 0) ? ("تقریباً {$runway_days} روز کاری") : 'بدون مصرف ساعتی فعال'; ?></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 1: My Cloud Servers -->
+            <div id="tab_my_servers" class="ar-tab-content active">
+                <!-- View Controls Toolbar -->
+                <div class="ar-view-toolbar">
+                    <div class="ar-search-box">
+                        <input type="text" id="ar_server_search" class="ar-search-input" placeholder="🔍 جستجوی سریع بر اساس نام سرور، IP، یا دیتاسنتر...">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="ar-view-toggle">
+                            <button type="button" class="ar-view-btn active" id="ar_btn_grid_view" onclick="switchServerView('grid');">⊞ نمای شبکه‌ای</button>
+                            <button type="button" class="ar-view-btn" id="ar_btn_table_view" onclick="switchServerView('table');">☰ نمای جدولی</button>
+                        </div>
+
+                        <button type="button" class="ar-btn ar-btn-primary ar-tab-btn" data-tab="tab_create_server" style="padding: 8px 16px;">
+                            ➕ سرور جدید
+                        </button>
+                    </div>
+                </div>
+
+                <?php if (empty($user_servers)): ?>
+                    <div class="ar-form-card" style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 54px; margin-bottom: 16px;">🌩️</div>
+                        <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 10px 0;">شما هنوز هیچ سرور ابری راه‌اندازی نکرده‌اید</h3>
+                        <p style="color: var(--ar-text-secondary); margin-bottom: 25px; font-size: 14px;">با چند کلیک، ابرک اختصاصی با دیسک پرسرعت NVMe و ترافیک نامحدود بسازید.</p>
+                        <button type="button" class="ar-btn ar-btn-primary ar-tab-btn" data-tab="tab_create_server" style="padding: 12px 24px;">
+                            🚀 ایجاد اولین سرور ابری
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <!-- Grid View -->
+                    <div id="ar_servers_grid_container" class="ar-servers-grid">
+                        <?php foreach ($user_servers as $srv): 
+                            $is_active = ($srv['status'] === 'ACTIVE');
+                            $specs = json_decode($srv['specs'], true) ?: array();
+                            
+                            $flag = '🇮🇷';
+                            $loc_title = 'تهران - عارف';
+                            if ($srv['region'] === 'ir-tbz-dc1') { $flag = '🇮🇷'; $loc_title = 'تبریز - شهریار'; }
+                            elseif ($srv['region'] === 'nl-ams-1') { $flag = '🇳🇱'; $loc_title = 'هلند - آمستردام'; }
+                        ?>
+                            <div class="ar-server-card" data-server-name="<?php echo esc_attr(strtolower($srv['name'])); ?>" data-server-ip="<?php echo esc_attr($srv['ip_address']); ?>" data-server-region="<?php echo esc_attr(strtolower($srv['region'])); ?>">
+                                <div>
+                                    <div class="ar-server-card-top">
+                                        <div class="ar-server-title">
+                                            <h3><?php echo esc_html($srv['name']); ?></h3>
+                                            <div class="ar-server-region"><?php echo $flag . ' ' . esc_html($loc_title); ?> (<code><?php echo esc_html($srv['region']); ?></code>)</div>
+                                        </div>
+                                        <span class="ar-status-badge <?php echo $is_active ? 'active' : 'suspended'; ?>">
+                                            <?php if ($is_active): ?>
+                                                <span class="ar-pulse-dot" style="width: 6px; height: 6px;"></span> روشن و فعال
+                                            <?php else: ?>
+                                                ⏹ خاموش (Suspend)
+                                            <?php endif; ?>
+                                        </span>
+                                    </div>
+
+                                    <div class="ar-server-meta-grid">
+                                        <div class="ar-server-meta-item">
+                                            <span>آدرس IP عمومی</span>
+                                            <strong dir="ltr" style="user-select: all;"><?php echo esc_html($srv['ip_address']); ?></strong>
+                                        </div>
+                                        <div class="ar-server-meta-item">
+                                            <span>پلن سخت‌افزاری</span>
+                                            <strong><?php echo esc_html($srv['flavor_name']); ?></strong>
+                                        </div>
+                                        <div class="ar-server-meta-item">
+                                            <span>تعرفه ساعتی</span>
+                                            <strong style="color: var(--ar-primary);"><?php echo number_format($srv['hourly_customer_price']); ?> تومان/ساعت</strong>
+                                        </div>
+                                        <div class="ar-server-meta-item">
+                                            <span>تخمین ماهانه</span>
+                                            <strong><?php echo number_format($srv['hourly_customer_price'] * 720); ?> تومان/ماه</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ar-server-actions">
+                                    <?php if ($is_active): ?>
+                                        <button type="button" class="ar-btn ar-btn-danger ar-action-btn" data-action="power_off" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">
+                                            ⏹ خاموش کردن
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="button" class="ar-btn ar-btn-primary ar-action-btn" data-action="power_on" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">
+                                            ▶ روشن کردن
+                                        </button>
+                                    <?php endif; ?>
+
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" title="مشاهده کنسول لاگ و وب‌ترمینال">
+                                        💻 وب کنسول
+                                    </button>
+
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-action-btn" data-action="terminate" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" style="color: #ef4444;" title="حذف دائمی سرور">
+                                        🗑️ حذف
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Table View -->
+                    <div id="ar_servers_table_container" class="ar-servers-table-wrap" style="display: none;">
+                        <table class="ar-data-table">
                             <thead>
                                 <tr>
                                     <th>نام ابرک</th>
+                                    <th>موقعیت دیتاسنتر</th>
+                                    <th>آدرس IP عمومی</th>
+                                    <th>پلن سخت‌افزار</th>
+                                    <th>تعرفه ساعتی</th>
                                     <th>وضعیت</th>
-                                    <th>آدرس IP</th>
-                                    <th>پلن سخت‌افزاری</th>
-                                    <th>منطقه ابری</th>
-                                    <th>هزینه ساعتی</th>
                                     <th>عملیات</th>
                                 </tr>
                             </thead>
@@ -241,23 +282,23 @@ $runway_days = round($runway_hours / 24, 1);
                                 ?>
                                     <tr>
                                         <td><strong><?php echo esc_html($srv['name']); ?></strong></td>
+                                        <td><code><?php echo esc_html($srv['region']); ?></code></td>
+                                        <td dir="ltr"><code><?php echo esc_html($srv['ip_address']); ?></code></td>
+                                        <td><?php echo esc_html($srv['flavor_name']); ?></td>
+                                        <td style="color: var(--ar-primary); font-weight: 700;"><?php echo number_format($srv['hourly_customer_price']); ?> تومان</td>
                                         <td>
                                             <span class="ar-status-badge <?php echo $is_active ? 'active' : 'suspended'; ?>">
-                                                <?php echo $is_active ? '● فعال' : '⏸ معلق'; ?>
+                                                <?php echo $is_active ? 'روشن' : 'خاموش'; ?>
                                             </span>
                                         </td>
-                                        <td><code style="font-family: 'JetBrains Mono', monospace;" dir="ltr"><?php echo esc_html($srv['ip_address']); ?></code></td>
-                                        <td><?php echo esc_html($srv['flavor_name']); ?></td>
-                                        <td><?php echo esc_html($srv['region']); ?></td>
-                                        <td><strong style="color: var(--ar-primary);"><?php echo number_format(floatval($srv['hourly_customer_price'])); ?> تومان</strong></td>
                                         <td>
                                             <div style="display: flex; gap: 6px;">
                                                 <?php if ($is_active): ?>
-                                                    <button type="button" class="ar-btn ar-btn-danger ar-toggle-power-btn" data-resource-id="<?php echo esc_attr($srv['resource_id']); ?>" data-action="power-off" style="padding: 5px 10px; font-size: 12px;">خاموش</button>
+                                                    <button type="button" class="ar-btn ar-btn-danger ar-action-btn" style="padding: 4px 8px; font-size: 11px;" data-action="power_off" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">خاموش</button>
                                                 <?php else: ?>
-                                                    <button type="button" class="ar-btn ar-btn-success ar-toggle-power-btn" data-resource-id="<?php echo esc_attr($srv['resource_id']); ?>" data-action="power-on" style="padding: 5px 10px; font-size: 12px;">روشن</button>
+                                                    <button type="button" class="ar-btn ar-btn-primary ar-action-btn" style="padding: 4px 8px; font-size: 11px;" data-action="power_on" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">روشن</button>
                                                 <?php endif; ?>
-                                                <button type="button" class="ar-btn ar-btn-secondary ar-open-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" style="padding: 5px 10px; font-size: 12px;">کنسول</button>
+                                                <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" style="padding: 4px 8px; font-size: 11px;" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>">کنسول</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -265,235 +306,373 @@ $runway_days = round($runway_hours / 24, 1);
                             </tbody>
                         </table>
                     </div>
-                </div>
-            <?php endif; ?>
-        </div>
+                <?php endif; ?>
+            </div>
 
-        <!-- Tab 2: Create Server Wizard -->
-        <div id="tab_create_server" class="ar-tab-content" style="display: none;">
-            <div class="ar-form-card" style="max-width: 860px; margin: 0 auto;">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-                    <span style="font-size: 28px;">🚀</span>
-                    <div>
-                        <h2 style="margin: 0; font-size: 20px; font-weight: 900;">ویزارد راه‌اندازی و تحویل آنی سرور ابری</h2>
-                        <span style="font-size: 13px; color: var(--ar-text-secondary);">منابع سخت‌افزاری و سیستم‌عامل دلخواه خود را پیکربندی نمایید.</span>
+            <!-- Tab 2: Create New Cloud Server -->
+            <div id="tab_create_server" class="ar-tab-content">
+                <div class="ar-form-card">
+                    <div style="border-bottom: 1px solid var(--ar-border-subtle); padding-bottom: 16px; margin-bottom: 24px;">
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 900; color: var(--ar-text-main);">🚀 راه‌اندازی و استقرار ابرک جدید (Instant Cloud Deployer)</h2>
+                        <p style="margin: 6px 0 0 0; color: var(--ar-text-secondary); font-size: 13.5px;">با تکمیل فرم زیر، سرور ابری شما در کمتر از ۳۰ ثانیه پیکربندی و آماده استفاده می‌شود.</p>
                     </div>
-                </div>
 
-                <form id="ar_create_server_form">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 10px;">
-                        <div class="ar-form-group">
-                            <label class="ar-form-label" for="ar_server_name">🏷️ نام سرور (Hostname):</label>
-                            <input type="text" id="ar_server_name" class="ar-input" placeholder="مثال: cloud-web-node" required value="srv-node-<?php echo rand(100, 999); ?>">
+                    <form id="ar_create_server_form">
+                        <!-- AI Recommendation Banner Hook -->
+                        <div id="ar_ai_recommendation_box" style="display: none; background: rgba(0, 186, 186, 0.12); border: 1px solid rgba(0, 186, 186, 0.35); border-radius: var(--ar-radius-md); padding: 14px 18px; margin-bottom: 24px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 22px;">🤖</span>
+                                <div>
+                                    <div style="font-weight: 800; color: var(--ar-primary); font-size: 13.5px;">پیشنهاد هوش مصنوعی انتخاب پلن اعمال گردید:</div>
+                                    <div id="ar_ai_text" style="font-size: 12.5px; color: var(--ar-text-main); margin-top: 2px;"></div>
+                                </div>
+                            </div>
                         </div>
 
+                        <!-- Step 1: Region -->
                         <div class="ar-form-group">
-                            <label class="ar-form-label" for="ar_region_select">🌍 دیتاسنتر / منطقه ابری:</label>
-                            <select id="ar_region_select" class="ar-select">
-                                <option value="ir-thr-at1">🇮🇷 تهران - دیتاسنتر عارف (ir-thr-at1)</option>
-                                <option value="ir-thr-c1">🇮🇷 تهران - دیتاسنتر پردیس (ir-thr-c1)</option>
-                                <option value="ir-tbz-dc1">🇮🇷 تبریز - دیتاسنتر شهریار (ir-tbz-dc1)</option>
-                                <option value="nl-ams-1">🇳🇱 هلند - آمستردام (nl-ams-1)</option>
+                            <label class="ar-form-label">۱. موقعیت جغرافیایی دیتاسنتر (Region):</label>
+                            <div class="ar-plan-cards">
+                                <label class="ar-plan-card" style="cursor: pointer;">
+                                    <input type="radio" name="region" value="ir-thr-at1" checked style="display: none;">
+                                    <div style="font-size: 24px; margin-bottom: 6px;">🇮🇷</div>
+                                    <div style="font-weight: 800; font-size: 14px;">تهران - عارف (at1)</div>
+                                    <div style="font-size: 11.5px; color: var(--ar-text-muted); margin-top: 4px;">کمترین پینگ داخلی (۵ms)</div>
+                                </label>
+
+                                <label class="ar-plan-card" style="cursor: pointer;">
+                                    <input type="radio" name="region" value="ir-tbz-dc1" style="display: none;">
+                                    <div style="font-size: 24px; margin-bottom: 6px;">🇮🇷</div>
+                                    <div style="font-weight: 800; font-size: 14px;">تبریز - شهریار (dc1)</div>
+                                    <div style="font-size: 11.5px; color: var(--ar-text-muted); margin-top: 4px;">پایداری بالا و بک‌آپ</div>
+                                </label>
+
+                                <label class="ar-plan-card" style="cursor: pointer;">
+                                    <input type="radio" name="region" value="nl-ams-1" style="display: none;">
+                                    <div style="font-size: 24px; margin-bottom: 6px;">🇳🇱</div>
+                                    <div style="font-weight: 800; font-size: 14px;">هلند - آمستردام (ams1)</div>
+                                    <div style="font-size: 11.5px; color: var(--ar-text-muted); margin-top: 4px;">پورت ۱۰ گیگابیت بین‌الملل</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Flavor Selection -->
+                        <div class="ar-form-group">
+                            <label class="ar-form-label" for="ar_flavor_select">۲. پلن سخت‌افزاری و منابع پردازشی (Hardware Flavor):</label>
+                            <select id="ar_flavor_select" class="ar-select" required>
+                                <?php foreach ($flavors as $flv): 
+                                    $reseller_margin = floatval(get_option('arvan_reseller_margin', 20));
+                                    $cust_hourly = round($flv['hourly_price'] * (1 + ($reseller_margin / 100)));
+                                    $cust_monthly = $cust_hourly * 720;
+                                ?>
+                                    <option value="<?php echo esc_attr($flv['id']); ?>" data-name="<?php echo esc_attr($flv['name']); ?>" data-hourly="<?php echo esc_attr($cust_hourly); ?>" data-monthly="<?php echo esc_attr($cust_monthly); ?>">
+                                        <?php echo esc_html($flv['name']); ?> — [ <?php echo number_format($cust_hourly); ?> تومان/ساعت | ~<?php echo number_format($cust_monthly); ?> تومان/ماه ]
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="ar-form-group">
-                        <label class="ar-form-label" for="ar_flavor_select">⚡ مشخصات سخت‌افزاری (vCPU / RAM / NVMe):</label>
-                        <select id="ar_flavor_select" class="ar-select">
-                            <?php foreach ($flavors as $f): 
-                                $hourly_c = round(floatval($f['hourly_price']) * (1 + ($margin / 100)));
-                            ?>
-                                <option value="<?php echo esc_attr($f['id']); ?>">
-                                    <?php echo esc_html($f['name']); ?> — [<?php echo number_format($hourly_c); ?> تومان / ساعت]
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="ar-form-group">
-                        <label class="ar-form-label" for="ar_image_select">💿 سیستم‌عامل و نرم‌افزار پایه (OS Image):</label>
-                        <select id="ar_image_select" class="ar-select">
-                            <?php foreach ($images as $img): ?>
-                                <option value="<?php echo esc_attr($img['id']); ?>">
-                                    <?php echo esc_html($img['name']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <!-- Price Estimate Box -->
-                    <div style="background: rgba(0, 186, 186, 0.06); border: 1px solid var(--ar-border-active); border-radius: var(--ar-radius-md); padding: 18px 24px; margin: 24px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                        <div>
-                            <span style="font-size: 12px; color: var(--ar-text-secondary);">نرخ مصرف ساعتی از کیف پول:</span>
-                            <div id="ar_hourly_calc" style="font-size: 22px; font-weight: 900; color: var(--ar-primary);">--- تومان / ساعت</div>
-                        </div>
-                        <div style="text-align: left;">
-                            <span style="font-size: 12px; color: var(--ar-text-secondary);">تخمین هزینه ماهانه (۳۰ روز):</span>
-                            <div id="ar_monthly_calc" style="font-size: 18px; font-weight: 800; color: var(--ar-text-primary);">--- تومان / ماه</div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="ar-btn ar-btn-primary" style="width: 100%; padding: 15px; font-size: 16px; font-weight: 900;">
-                        🚀 ایجاد و تحویل آنی سرور ابری
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Tab 3: CDN & Object Storage -->
-        <div id="tab_cdn_storage" class="ar-tab-content" style="display: none;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                <!-- CDN Card -->
-                <div class="ar-form-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0; font-size: 18px; font-weight: 800;">🌐 شبکه توزیع محتوا (CDN)</h3>
-                        <span class="ar-status-badge active">فعال و متصل</span>
-                    </div>
-                    <p style="font-size: 13.5px; color: var(--ar-text-secondary); line-height: 1.6; margin-bottom: 20px;">
-                        بهینه‌سازی لبه شبکه (Edge)، ضد حملات DDoS لایه ۷ و صدور گواهی SSL رایگان در بیش از ۴۰ پاپ‌سایت بین‌المللی.
-                    </p>
-                    <div style="background: var(--ar-bg-body); border: 1px solid var(--ar-border-card); border-radius: var(--ar-radius-sm); padding: 14px; margin-bottom: 20px;">
-                        <div style="font-size: 13px; font-weight: bold; margin-bottom: 4px;">دامنه فعال: shop4bit.ir</div>
-                        <div style="font-size: 12px; color: var(--ar-text-muted);">NameServers: ns1.arvancdn.ir / ns2.arvancdn.ir</div>
-                    </div>
-                    <button type="button" class="ar-btn ar-btn-secondary" style="width: 100%; padding: 12px;" onclick="alert('کش کل لایه‌های لبه با موفقیت پاک‌سازی شد (Purge Cache Complete).');">
-                        ⚡ پاک‌سازی فوری کش لبه (Purge Cache)
-                    </button>
-                </div>
-
-                <!-- S3 Storage Card -->
-                <div class="ar-form-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0; font-size: 18px; font-weight: 800;">📦 فضای ذخیره‌سازی ابری (S3 Bucket)</h3>
-                        <span class="ar-status-badge active">AWS S3 API</span>
-                    </div>
-                    <p style="font-size: 13.5px; color: var(--ar-text-secondary); line-height: 1.6; margin-bottom: 20px;">
-                        ذخیره‌سازی فایل‌ها با دوام ۹۹.۹۹۹۹۹۹۹۹۹٪ (۱۱ تا ۹) سازگار با انواع ابزارهای S3cmd، Cyberduck و MinIO SDK.
-                    </p>
-                    <div style="background: var(--ar-bg-body); border: 1px solid var(--ar-border-card); border-radius: var(--ar-radius-sm); padding: 14px; margin-bottom: 20px;">
-                        <div style="font-size: 13px; font-weight: bold; margin-bottom: 4px;">باکت فعال: arvan-storage-backup</div>
-                        <div style="font-size: 12px; color: var(--ar-text-muted);" dir="ltr">Endpoint: https://s3.ir-thr-at1.arvanstorage.ir</div>
-                    </div>
-                    <button type="button" class="ar-btn ar-btn-secondary" style="width: 100%; padding: 12px;" onclick="alert('کلید دسترسی S3 Access Key تولید گردید.');">
-                        🔑 مدیریت کلیدهای دسترسی (Access Keys)
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab 4: AI Advisor -->
-        <div id="tab_ai_advisor" class="ar-tab-content" style="display: none;">
-            <div class="ar-form-card">
-                <h3 style="margin: 0 0 12px 0; font-size: 19px; font-weight: 900;">🤖 دستیار هوشمند انتخاب منابع و کاهش هزینه ابری (AI Advisor)</h3>
-                <p style="font-size: 13.5px; color: var(--ar-text-secondary); margin-bottom: 24px;">
-                    نوع پروژه یا سناریوی مصرف خود را انتخاب کنید تا موتور هوش مصنوعی بهترین ترکیب پردازنده، رم و دیتاسنتر را پیشنهاد دهد:
-                </p>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 25px;">
-                    <div class="ar-bento-card" style="cursor: pointer;" onclick="applyAiRecommendation('g1-2-1-0', 'سایت فروشگاهی وردپرس و ووکامرس (تا ۵۰ هزار بازدید)', 'General 2GB');">
-                        <div style="font-size: 28px;">🛍️</div>
-                        <div>
-                            <div style="font-size: 15px; font-weight: 800; margin-bottom: 4px;">فروشگاه آنلاین ووکامرس</div>
-                            <div style="font-size: 12px; color: var(--ar-primary);">پیشنهاد: ۲ گیگابایت رم + ۱ هسته پردازنده</div>
-                        </div>
-                    </div>
-
-                    <div class="ar-bento-card" style="cursor: pointer;" onclick="applyAiRecommendation('g1-4-2-0', 'پایگاه داده MySQL / PostgreSQL سازمانی', 'Pro Standard');">
-                        <div style="font-size: 28px;">🗄️</div>
-                        <div>
-                            <div style="font-size: 15px; font-weight: 800; margin-bottom: 4px;">پایگاه داده سنگین (DB)</div>
-                            <div style="font-size: 12px; color: var(--ar-primary);">پیشنهاد: ۴ گیگابایت رم + ۲ هسته پردازنده</div>
-                        </div>
-                    </div>
-
-                    <div class="ar-bento-card" style="cursor: pointer;" onclick="applyAiRecommendation('g1-1-1-0', 'ربات تلگرام، اسکریپت پایتون و وبلاگ شخصی', 'Eco Starter');">
-                        <div style="font-size: 28px;">🐍</div>
-                        <div>
-                            <div style="font-size: 15px; font-weight: 800; margin-bottom: 4px;">ربات پایتون و ابزارک‌ها</div>
-                            <div style="font-size: 12px; color: var(--ar-primary);">پیشنهاد: ۱ گیگابایت رم (پلن اقتصادی)</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="ar_ai_recommendation_box" style="display: none; background: rgba(0, 186, 186, 0.08); border: 1px solid var(--ar-primary); border-radius: var(--ar-radius-md); padding: 22px; margin-top: 20px;">
-                    <h4 style="margin: 0 0 10px 0; color: var(--ar-primary); font-size: 16px;">✨ تحلیل و پیشنهاد دستیار هوش مصنوعی:</h4>
-                    <p id="ar_ai_text" style="font-size: 14px; line-height: 1.7; margin-bottom: 16px; color: var(--ar-text-primary);"></p>
-                    <button type="button" class="ar-btn ar-btn-primary" onclick="document.querySelector('[data-tab=tab_create_server]').click();">
-                        🚀 انتقال به ویزارد و تحویل سرور پیشنهادی
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab 5: Wallet Ledger -->
-        <div id="tab_wallet_history" class="ar-tab-content" style="display: none;">
-            <div class="ar-table-card">
-                <div style="padding: 20px 24px; border-bottom: 1px solid var(--ar-border-card); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                    <div>
-                        <h3 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800;">📜 ریزتراکنش‌های دفتر کل مالی (Double-Entry Ledger)</h3>
-                        <span style="font-size: 12px; color: var(--ar-text-secondary);">ثبت دقیق تمامی شارژها و کسرهای مصرف ساعتی به تفکیک زمان</span>
-                    </div>
-                    <button type="button" class="ar-btn ar-btn-secondary" style="font-size: 12.5px; padding: 7px 16px;" onclick="exportTableToCSV('arvan_ledger_report.csv')">
-                        📥 دانلود فایل اکسل (CSV)
-                    </button>
-                </div>
-
-                <div class="ar-table-responsive">
-                    <table class="ar-enterprise-table" id="ar_ledger_table">
-                        <thead>
-                            <tr>
-                                <th>ردیف</th>
-                                <th>نوع تراکنش</th>
-                                <th>مبلغ (تومان)</th>
-                                <th>موجودی قبل</th>
-                                <th>موجودی بعد</th>
-                                <th>شناسه پیگیری</th>
-                                <th>شرح عملیات</th>
-                                <th>تاریخ و زمان</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($ledger)): ?>
-                                <tr>
-                                    <td colspan="8" style="text-align: center; color: var(--ar-text-muted); padding: 30px;">هیچ سابقه تراکنشی ثبت نشده است.</td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach ($ledger as $i => $row): 
-                                    $is_deposit = ($row['type'] === 'DEPOSIT');
-                                ?>
-                                    <tr>
-                                        <td>#<?php echo $i + 1; ?></td>
-                                        <td>
-                                            <span class="ar-status-badge <?php echo $is_deposit ? 'active' : 'suspended'; ?>" style="font-size: 11px;">
-                                                <?php echo $is_deposit ? '➕ شارژ آنلاین' : '➖ کسر مصرف ساعتی'; ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <strong style="color: <?php echo $is_deposit ? 'var(--ar-status-success)' : 'var(--ar-status-danger)'; ?>;">
-                                                <?php echo ($is_deposit ? '+' : '') . number_format(floatval($row['amount'])); ?>
-                                            </strong>
-                                        </td>
-                                        <td><?php echo number_format(floatval($row['balance_before'])); ?></td>
-                                        <td><strong><?php echo number_format(floatval($row['balance_after'])); ?></strong></td>
-                                        <td><code><?php echo esc_html($row['reference_id']); ?></code></td>
-                                        <td><?php echo esc_html($row['description']); ?></td>
-                                        <td dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;"><?php echo esc_html($row['created_at']); ?></td>
-                                    </tr>
+                        <!-- Step 3: Operating System Image -->
+                        <div class="ar-form-group">
+                            <label class="ar-form-label" for="ar_image_select">۳. سیستم‌عامل و پلتفرم اجرایی (OS Image):</label>
+                            <select id="ar_image_select" class="ar-select" required>
+                                <?php foreach ($images as $img): ?>
+                                    <option value="<?php echo esc_attr($img['id']); ?>">
+                                        <?php echo esc_html($img['name']); ?> (<?php echo esc_html($img['os']); ?>)
+                                    </option>
                                 <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                            </select>
+                        </div>
+
+                        <!-- Step 4: Server Name & SSH -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                            <div class="ar-form-group" style="margin-bottom: 0;">
+                                <label class="ar-form-label" for="ar_server_name_input">۴. نام اختصاصی سرور (Hostname):</label>
+                                <input type="text" id="ar_server_name_input" class="ar-input" value="web-server-node-1" placeholder="my-app-server" required>
+                            </div>
+
+                            <div class="ar-form-group" style="margin-bottom: 0;">
+                                <label class="ar-form-label" for="ar_ssh_key_input">۵. کلید عمومی SSH (اختیاری):</label>
+                                <input type="text" id="ar_ssh_key_input" class="ar-input" placeholder="ssh-rsa AAAA..." dir="ltr">
+                            </div>
+                        </div>
+
+                        <!-- Pricing Summary Box -->
+                        <div class="ar-pricing-summary-box">
+                            <div>
+                                <div style="font-size: 13px; color: var(--ar-text-secondary); font-weight: 600;">تعرفه مصرف ساعتی (کسر خودکار از کیف پول):</div>
+                                <div style="font-size: 26px; font-weight: 900; color: var(--ar-primary); margin-top: 4px;">
+                                    <span id="ar_create_hourly_price">--</span> <small style="font-size: 13px; font-weight: normal; color: var(--ar-text-muted);">تومان / ساعت</small>
+                                </div>
+                                <div style="font-size: 12.5px; color: var(--ar-text-muted); margin-top: 2px;">
+                                    معادل تقریبی ماهانه: <strong id="ar_create_monthly_price" style="color: var(--ar-text-main);">--</strong> تومان
+                                </div>
+                            </div>
+
+                            <button type="submit" id="ar_btn_submit_create" class="ar-btn ar-btn-primary" style="padding: 14px 28px; font-size: 15px; font-weight: 900;">
+                                ⚡ راه‌اندازی و تحویل آنی ابرک
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
-    </main>
+
+            <!-- Tab 3: CDN & S3 Storage -->
+            <div id="tab_cdn_storage" class="ar-tab-content">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <!-- CDN Management -->
+                    <div class="ar-form-card">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                            <span style="font-size: 32px;">🌐</span>
+                            <div>
+                                <h3 style="margin: 0; font-size: 17px; font-weight: 800;">شبکه توزیع محتوا (CDN & WAF)</h3>
+                                <p style="margin: 2px 0 0 0; font-size: 12px; color: var(--ar-text-muted);">شتاب‌دهی وب‌سایت، کش ابری و محافظت ضد DDoS</p>
+                            </div>
+                        </div>
+
+                        <div class="ar-form-group">
+                            <label class="ar-form-label">افزودن دامنه جدید به شبکه CDN آروان:</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="ar_cdn_domain_input" class="ar-input" placeholder="example.com" dir="ltr">
+                                <button type="button" class="ar-btn ar-btn-primary" onclick="alert('✅ دامنه به شبکه توزیع محتوا افزوده شد. رکوردهای NS را تنظیم نمایید.');">
+                                    ثبت دامنه
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--ar-bg-surface); border-radius: 10px; padding: 14px; margin-top: 16px;">
+                            <div style="font-size: 12.5px; font-weight: 800; margin-bottom: 8px;">دامنه‌های فعال در CDN:</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; border-bottom: 1px dashed var(--ar-border-subtle); padding-bottom: 8px;">
+                                <span dir="ltr"><strong>shop4bit.ir</strong></span>
+                                <span style="color: var(--ar-status-success); font-weight: 700;">● فعال (پروکسی روشن)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; padding-top: 8px;">
+                                <span dir="ltr"><strong>api.starcoach.cloud</strong></span>
+                                <span style="color: var(--ar-status-success); font-weight: 700;">● فعال (SSL رایگان)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- S3 Object Storage -->
+                    <div class="ar-form-card">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                            <span style="font-size: 32px;">🗄️</span>
+                            <div>
+                                <h3 style="margin: 0; font-size: 17px; font-weight: 800;">فضای ذخیره‌سازی ابری (S3 Storage)</h3>
+                                <p style="margin: 2px 0 0 0; font-size: 12px; color: var(--ar-text-muted);">سازگار با پروتکل Amazon S3، باکت‌های عمومی و خصوصی</p>
+                            </div>
+                        </div>
+
+                        <div class="ar-form-group">
+                            <label class="ar-form-label">ایجاد باکت جدید (New Bucket):</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="ar_s3_bucket_input" class="ar-input" placeholder="my-app-uploads" dir="ltr">
+                                <button type="button" class="ar-btn ar-btn-primary" onclick="alert('✅ باکت جدید در دیتاسنتر تهران با موفقیت ساخته شد.');">
+                                    ایجاد باکت
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--ar-bg-surface); border-radius: 10px; padding: 14px; margin-top: 16px;">
+                            <div style="font-size: 12.5px; font-weight: 800; margin-bottom: 8px;">باکت‌های ذخیره‌سازی ابری:</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; border-bottom: 1px dashed var(--ar-border-subtle); padding-bottom: 8px;">
+                                <span dir="ltr">🗂️ <strong>media-assets-prod</strong></span>
+                                <span style="color: var(--ar-text-muted);">۳۴.۲ گیگابایت مصرف</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; padding-top: 8px;">
+                                <span dir="ltr">🗂️ <strong>db-nightly-backups</strong></span>
+                                <span style="color: var(--ar-text-muted);">۱۲.۸ گیگابایت مصرف</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: AI Agentic Copilot & Autonomous Deployer -->
+            <div id="tab_ai_advisor" class="ar-tab-content">
+                <div class="ar-form-card" style="padding: 24px; position: relative;">
+                    
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--ar-border-subtle); padding-bottom: 18px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div class="ar-ai-avatar">🤖</div>
+                            <div>
+                                <h2 style="margin: 0; font-size: 18px; font-weight: 900; color: var(--ar-text-main);">دستیار هوشمند و عامل استقرار ابری (ArvanCloud AI Copilot)</h2>
+                                <p style="margin: 3px 0 0 0; font-size: 12.5px; color: var(--ar-text-secondary);">متصل به پایگاه دانش RAG مستندات آروان، تحلیل خودکار نیاز و استقرار مستقیم سرور</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="ar-status-badge active" style="font-size: 11.5px;">
+                                <span class="ar-pulse-dot" style="width: 6px; height: 6px;"></span> هوش مصنوعی آماده اقدام
+                            </span>
+                            <button type="button" class="ar-btn ar-btn-secondary" id="ar_ai_clear_chat" style="padding: 6px 12px; font-size: 12px;" title="شروع مکالمه جدید">
+                                🔄 گفتگوی جدید
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Scenario Chips -->
+                    <div class="ar-ai-quick-chips">
+                        <span style="font-size: 12px; color: var(--ar-text-muted); font-weight: 700; display: flex; align-items: center; gap: 4px;">⚡ سناریوهای سریع:</span>
+                        <button type="button" class="ar-ai-chip" data-prompt="من یک فروشگاه ووکامرس پربازدید با ۵۰۰۰ بازدید روزانه دارم، چه سروری با چه کانفیگی پیشنهاد میدی؟">🛒 فروشگاه ووکامرس</button>
+                        <button type="button" class="ar-ai-chip" data-prompt="برای اجرای بک‌اند لاراول و پردازش صف‌های داکر به سرور با رم ۴ گیگ نیاز دارم، چه پلنی مناسبه؟">⚙️ بک‌اند لاراول و داکر</button>
+                        <button type="button" class="ar-ai-chip" data-prompt="یک دیتابیس اختصاصی سنگین PostgreSQL با کش ردیس دارم، بهترین پلن با دیسک NVMe چیه؟">🐘 دیتابیس سنگین PostgreSQL</button>
+                        <button type="button" class="ar-ai-chip" data-prompt="یک سرور خارج در هلند برای اتصال به APIهای خارجی و وب‌کراولر بدون محدودیت میخوام.">🇳🇱 سرور هلند (آمستردام)</button>
+                        <button type="button" class="ar-ai-chip" data-prompt="برای سیستمی با مقیاس ۱ میلیون کاربر همزمان چه معماری و پلنی رو پیشنهاد می‌کنی؟">🚀 مقیاس ۱ میلیون کاربر</button>
+                    </div>
+
+                    <!-- Chat Messages Container -->
+                    <div class="ar-ai-chat-box" id="ar_ai_chat_container">
+                        <!-- Welcome message from AI -->
+                        <div class="ar-ai-msg ar-ai-msg-bot">
+                            <div class="ar-ai-msg-avatar">🤖</div>
+                            <div class="ar-ai-msg-body">
+                                <div class="ar-ai-msg-content">
+                                    سلام! من **دستیار هوش مصنوعی عامل‌گرا (AI Copilot) سرخ‌آب کلاود** هستم. ☁️✨<br><br>
+                                    من به تمام مستندات فنی، پلن‌های سخت‌افزاری، قیمت‌ها و دیتاسنترهای ابر آروان دسترسی دارم. کافیست سناریو یا هدف کاری‌تان را بگویید تا بهترین پلن را با محاسبه دقیق هزینه به شما پیشنهاد دهم و در صورت تمایل، <strong>مستقیماً همین سرور را برایتان بسازم و در داشبوردتان فعال کنم!</strong><br><br>
+                                    <em>مثلاً بفرمایید: «من برای فلان کار سرور میخوام، تو چی پیشنهاد میدی؟»</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Form -->
+                    <form id="ar_ai_chat_form" class="ar-ai-input-wrap">
+                        <input type="text" id="ar_ai_input_text" class="ar-ai-input" placeholder="نیاز یا پروژه خود را بنویسید (مثلاً: یک سرور برای لاراول و دیتابیس میخوام)..." autocomplete="off" required>
+                        <button type="submit" id="ar_ai_send_btn" class="ar-btn ar-btn-primary" style="padding: 0 24px; font-size: 14px; font-weight: 800; border-radius: var(--ar-radius-md); height: 50px;">
+                            <span>ارسال</span> 🚀
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Tab 5: Wallet History & Ledger -->
+            <div id="tab_wallet_history" class="ar-tab-content">
+                <div class="ar-form-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--ar-border-subtle); padding-bottom: 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h2 style="margin: 0; font-size: 18px; font-weight: 900; color: var(--ar-text-main);">📜 دفتر کل مالی و ریز تراکنش‌های مصرف ابری (Ledger)</h2>
+                            <p style="margin: 4px 0 0 0; color: var(--ar-text-secondary); font-size: 12.5px;">ثبت دقیق هر ثانیه و ساعت کسر مصرف و افزایش اعتبار با کد پیگیری یکتا.</p>
+                        </div>
+
+                        <button type="button" class="ar-btn ar-btn-secondary" style="padding: 7px 14px; font-size: 12.5px;" onclick="exportTableToCSV('arvan-ledger-report.csv');">
+                            📥 خروجی اکسل (CSV)
+                        </button>
+                    </div>
+
+                    <?php if (empty($ledger_history)): ?>
+                        <div style="text-align: center; padding: 40px; color: var(--ar-text-muted);">
+                            هنوز هیچ تراکنشی ثبت نشده است.
+                        </div>
+                    <?php else: ?>
+                        <div class="ar-servers-table-wrap">
+                            <table class="ar-data-table" id="ar_ledger_table">
+                                <thead>
+                                    <tr>
+                                        <th>شناسه تراکنش</th>
+                                        <th>نوع عملیات</th>
+                                        <th>مبلغ (تومان)</th>
+                                        <th>موجودی بعد از تراکنش</th>
+                                        <th>شرح و منبع تراکنش</th>
+                                        <th>تاریخ و زمان</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($ledger_history as $tx): 
+                                        $is_dep = ($tx['transaction_type'] === 'DEPOSIT');
+                                        $amt_formatted = number_format(abs($tx['amount']));
+                                    ?>
+                                        <tr>
+                                            <td dir="ltr"><code>#<?php echo esc_html($tx['reference_id'] ?: $tx['id']); ?></code></td>
+                                            <td>
+                                                <span class="ar-status-badge <?php echo $is_dep ? 'active' : 'suspended'; ?>" style="font-size: 11px;">
+                                                    <?php echo $is_dep ? '➕ شارژ حساب' : '⚡ کسر مصرف ابری'; ?>
+                                                </span>
+                                            </td>
+                                            <td style="font-weight: 800; color: <?php echo $is_dep ? 'var(--ar-status-success)' : '#f43f5e'; ?>;">
+                                                <?php echo ($is_dep ? '+' : '-') . $amt_formatted; ?> تومان
+                                            </td>
+                                            <td style="font-weight: 700; color: var(--ar-text-main);">
+                                                <?php echo number_format($tx['balance_after']); ?> تومان
+                                            </td>
+                                            <td style="font-size: 12.5px; color: var(--ar-text-secondary);"><?php echo esc_html($tx['description']); ?></td>
+                                            <td dir="ltr" style="font-size: 12px; color: var(--ar-text-muted);"><?php echo esc_html($tx['created_at']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Tab 6: Rate Limiting & API Quota Telemetry -->
+            <div id="tab_rate_limit_health" class="ar-tab-content">
+                <div class="ar-form-card">
+                    <div style="border-bottom: 1px solid var(--ar-border-subtle); padding-bottom: 16px; margin-bottom: 24px;">
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 900; color: var(--ar-text-main);">⚡ پایش سلامت وب‌سرویس، ریت‌لیمیت و امنیت کلیدها</h2>
+                        <p style="margin: 6px 0 0 0; color: var(--ar-text-secondary); font-size: 13.5px;">سیستم هوشمند کنترل بار (Rate Limiting) و رمزنگاری کلیدهای اختصاصی با الگوریتم نظامی AES-256.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                        <div class="ar-bento-card">
+                            <div class="ar-bento-icon" style="color: #10b981;">🛡️</div>
+                            <div class="ar-bento-data">
+                                <div class="ar-bento-title">امنیت کلید در دیتابیس</div>
+                                <div class="ar-bento-value" style="color: #10b981; font-size: 18px;">AES-256-CBC</div>
+                                <div class="ar-bento-sub">رمزنگاری با سالت‌های وردپرس</div>
+                            </div>
+                        </div>
+
+                        <div class="ar-bento-card">
+                            <div class="ar-bento-icon" style="color: #6366f1;">⏱️</div>
+                            <div class="ar-bento-data">
+                                <div class="ar-bento-title">سقف مجاز درخواست‌ها</div>
+                                <div class="ar-bento-value"><?php echo $telemetry['max_rpm']; ?> <small style="font-size: 12px; color: var(--ar-text-muted);">req/min</small></div>
+                                <div class="ar-bento-sub">محدودیت پنجره لغزان ۶۰ ثانیه‌ای</div>
+                            </div>
+                        </div>
+
+                        <div class="ar-bento-card">
+                            <div class="ar-bento-icon" style="color: #38bdf8;">📊</div>
+                            <div class="ar-bento-data">
+                                <div class="ar-bento-title">تراکنش‌های امروز</div>
+                                <div class="ar-bento-value"><?php echo number_format($telemetry['today_requests']); ?></div>
+                                <div class="ar-bento-sub">مجموع کل: <?php echo number_format($telemetry['total_requests']); ?> ریکوئست</div>
+                            </div>
+                        </div>
+
+                        <div class="ar-bento-card">
+                            <div class="ar-bento-icon" style="color: #f43f5e;">⚠️</div>
+                            <div class="ar-bento-data">
+                                <div class="ar-bento-title">خطای ریت‌لیمیت (429)</div>
+                                <div class="ar-bento-value" style="color: <?php echo $telemetry['total_throttled'] > 0 ? '#ef4444' : '#10b981'; ?>;">
+                                    <?php echo $telemetry['total_throttled']; ?>
+                                </div>
+                                <div class="ar-bento-sub">شاخص سلامت: <?php echo $telemetry['health_score']; ?>٪ (<?php echo esc_html($telemetry['status']); ?>)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--ar-bg-surface); border-radius: 12px; padding: 18px; border: 1px solid var(--ar-border-subtle);">
+                        <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 800;">🔒 نحوه عملکرد سیستم امنیتی و کنترل ترافیک:</h4>
+                        <ul style="margin: 0; padding-right: 20px; font-size: 13px; color: var(--ar-text-secondary); line-height: 1.8;">
+                            <li>تمام کلیدهای API کاربر ماشین قبل از ذخیره در دیتابیس با کلیدهای یکتای سرور به صورت برگشت‌پذیر با الگوریتم AES-256 رمزنگاری می‌شوند تا حتی در صورت نفوذ به دیتابیس، کلیدها محافظت‌شده باشند.</li>
+                            <li>موتور Rate Limiter تعداد درخواست‌های ارسال‌شده را در پنجره‌های لغزان ۶۰ ثانیه‌ای ردیابی می‌کند و از بروز خطای مسدودی IP و دریافت پاسخ 429 جلوگیری می‌نماید.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <!-- Deposit Modal -->
     <div class="ar-modal-backdrop" id="ar_deposit_modal">
         <div class="ar-modal-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; font-size: 18px; font-weight: 800;">💳 افزایش اعتبار کیف پول پیش‌پرداخت</h3>
+                <h3 style="margin: 0; font-size: 18px; font-weight: 900; color: var(--ar-text-main);">💳 افزایش اعتبار کیف پول ابری</h3>
                 <button type="button" class="ar-close-modal" style="background: none; border: none; font-size: 24px; color: var(--ar-text-muted); cursor: pointer;">&times;</button>
             </div>
 
@@ -585,10 +764,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function applyAiRecommendation(flavorId, title, flavorName) {
-    document.getElementById('ar_flavor_select').value = flavorId;
-    document.getElementById('ar_flavor_select').dispatchEvent(new Event('change'));
-    document.getElementById('ar_ai_text').innerHTML = 'برای سناریوی <strong>' + title + '</strong>، پلن بهینه <strong>' + flavorName + '</strong> با سرعت دیسک NVMe انتخاب گردید.';
-    document.getElementById('ar_ai_recommendation_box').style.display = 'block';
+    var sel = document.getElementById('ar_flavor_select');
+    if (sel) {
+        sel.value = flavorId;
+        sel.dispatchEvent(new Event('change'));
+    }
+    var aiBox = document.getElementById('ar_ai_recommendation_box');
+    var aiText = document.getElementById('ar_ai_text');
+    if (aiBox && aiText) {
+        aiText.innerHTML = 'برای سناریوی <strong>' + title + '</strong>، پلن بهینه <strong>' + flavorName + '</strong> با سرعت دیسک NVMe انتخاب گردید.';
+        aiBox.style.display = 'block';
+    }
 }
 
 function exportTableToCSV(filename) {

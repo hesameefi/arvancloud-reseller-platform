@@ -111,20 +111,27 @@ class Arvan_Admin {
         if (!current_user_can('manage_options')) {
             wp_send_json_error('عدم دسترسی');
         }
-
-        $api_key = sanitize_text_field($_POST['api_key']);
-        $mode = sanitize_text_field($_POST['mode']);
-        $margin = floatval($_POST['margin']);
+        $api_key = isset($_POST['api_key']) ? trim(sanitize_text_field($_POST['api_key'])) : '';
+        $mode = isset($_POST['mode']) ? sanitize_text_field($_POST['mode']) : 'mock';
+        $margin = isset($_POST['margin']) ? floatval($_POST['margin']) : 20.0;
+        $rpm = isset($_POST['rate_limit_rpm']) ? intval($_POST['rate_limit_rpm']) : 60;
 
         if ($margin < 0 || $margin > 20) {
             wp_send_json_error('حاشیه سود ریسلر باید بین ۰ تا ۲۰ درصد باشد.');
         }
 
-        update_option('arvan_api_key', $api_key);
+        // Encrypt API key with AES-256
+        $encrypted_key = Arvan_Security::encrypt($api_key);
+
+        update_option('arvan_api_key', $encrypted_key);
         update_option('arvan_mode', $mode);
         update_option('arvan_reseller_margin', $margin);
+        update_option('arvan_rate_limit_rpm', max(10, min(600, $rpm)));
 
-        wp_send_json_success('تنظیمات با موفقیت ذخیره شد.');
+        // Reload credentials in API client singleton
+        Arvan_API_Client::get_instance()->reload_credentials();
+
+        wp_send_json_success('تنظیمات با موفقیت ذخیره و کلید API با الگوریتم AES-256 رمزنگاری گردید.');
     }
 
     public function ajax_run_cron_now() {

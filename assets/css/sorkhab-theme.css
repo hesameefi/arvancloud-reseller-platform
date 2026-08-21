@@ -170,11 +170,11 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
-   Root Layout Container
+   2-Column True Cloud SaaS Layout (Right Sidebar + Main Viewport)
    ========================================================================== */
 .ar-saas-layout {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     min-height: 100vh;
     width: 100%;
     background-color: var(--ar-bg-body);
@@ -187,115 +187,247 @@ footer.wp-block-template-part,
     font-family: inherit;
 }
 
-/* ==========================================================================
-   Top Header Bar (Minimalist Glassmorphic Luxury)
-   ========================================================================== */
-.ar-top-navbar {
+/* Right Sidebar (Glassmorphic Sorkhab Console) */
+.ar-sidebar {
+    width: 290px;
+    min-width: 290px;
+    background: var(--ar-bg-surface);
+    border-left: 1px solid var(--ar-border-subtle);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     position: sticky;
     top: 0;
-    z-index: 1000;
-    width: 100%;
-    background: var(--ar-bg-header);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--ar-border-subtle);
-    padding: 16px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    transition: all 0.3s ease;
+    z-index: 100;
+    padding: 24px 18px;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
 }
 
-.ar-brand-group {
+.ar-sidebar-brand {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--ar-border-subtle);
+    margin-bottom: 18px;
 }
 
 .ar-brand-logo {
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
     background: linear-gradient(135deg, #00baba 0%, #087373 100%);
     border-radius: var(--ar-radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 22px;
     box-shadow: 0 4px 18px rgba(0, 186, 186, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.ar-brand-info h1 {
-    margin: 0 0 3px 0 !important;
-    font-size: 20px !important;
+.ar-brand-text h2 {
+    margin: 0 !important;
+    font-size: 17px !important;
     font-weight: 900 !important;
-    letter-spacing: -0.3px;
     color: var(--ar-brand-text) !important;
 }
-
-.ar-brand-info span {
-    font-size: 12.5px;
+.ar-brand-text span {
+    font-size: 11.5px;
     color: var(--ar-text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 7px;
 }
 
+.ar-sidebar-wallet-card {
+    background: var(--ar-bg-card);
+    border: 1px solid var(--ar-border-card);
+    border-radius: var(--ar-radius-lg);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--ar-shadow-card);
+}
+.ar-sidebar-wallet-label {
+    font-size: 11px;
+    color: var(--ar-text-muted);
+    font-weight: 600;
+}
+.ar-sidebar-wallet-val {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--ar-primary);
+    margin: 4px 0 10px 0;
+}
+.ar-btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+.ar-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.ar-sidebar-nav-item {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--ar-radius-md);
+    padding: 11px 13px;
+    color: var(--ar-text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: right;
+    width: 100%;
+}
+.ar-sidebar-nav-item:hover {
+    background: var(--ar-bg-card);
+    color: var(--ar-text-primary);
+    border-color: var(--ar-border-subtle);
+    transform: translateX(-2px);
+}
+.ar-sidebar-nav-item.active {
+    background: linear-gradient(135deg, rgba(0, 186, 186, 0.15) 0%, rgba(0, 186, 186, 0.05) 100%);
+    border-color: var(--ar-border-active);
+    color: var(--ar-primary);
+    font-weight: 900;
+    box-shadow: 0 4px 14px var(--ar-primary-glow);
+}
+.ar-nav-icon {
+    font-size: 17px;
+}
+.ar-nav-title {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ar-nav-badge {
+    background: var(--ar-bg-card);
+    color: var(--ar-text-muted);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    border: 1px solid var(--ar-border-subtle);
+}
+.ar-sidebar-nav-item.active .ar-nav-badge {
+    background: var(--ar-primary);
+    color: #06090e;
+    font-weight: 800;
+}
+.ar-nav-badge.pulse {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--ar-status-success);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+.ar-nav-badge.ai {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.ar-sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid var(--ar-border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.ar-region-status {
+    font-size: 11.5px;
+    color: var(--ar-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 .ar-pulse-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     background: var(--ar-status-success);
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0 0 10px var(--ar-status-success);
     animation: ar-pulse 2s infinite;
 }
-
 @keyframes ar-pulse {
     0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
     70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-.ar-navbar-actions {
+.ar-theme-toggle-sidebar {
+    background: var(--ar-bg-card);
+    border: 1px solid var(--ar-border-card);
+    color: var(--ar-text-secondary);
+    padding: 8px 12px;
+    border-radius: var(--ar-radius-md);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+.ar-theme-toggle-sidebar:hover {
+    border-color: var(--ar-primary);
+    color: var(--ar-primary);
+}
+
+/* Main Viewport */
+.ar-main-viewport {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+.ar-top-navbar {
+    height: 64px;
+    background: var(--ar-bg-header);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--ar-border-subtle);
+    padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
+.ar-top-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+.ar-mobile-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--ar-border-card);
+    color: var(--ar-text-primary);
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.ar-top-actions {
     display: flex;
     align-items: center;
     gap: 14px;
 }
-
-.ar-wallet-pill {
-    background: var(--ar-bg-card);
-    border: 1px solid var(--ar-border-card);
-    border-radius: 35px;
-    padding: 7px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: var(--ar-shadow-card);
-    transition: all 0.25s ease;
-}
-
-.ar-wallet-pill:hover {
-    border-color: var(--ar-primary);
-    box-shadow: 0 0 18px rgba(0, 186, 186, 0.2);
-}
-
-.ar-wallet-meta {
-    text-align: right;
-}
-
-.ar-wallet-meta-title {
-    font-size: 11px;
-    color: var(--ar-text-muted);
-    font-weight: 600;
-}
-
-.ar-wallet-meta-value {
-    font-size: 17px;
-    font-weight: 900;
-    color: var(--ar-primary);
-    letter-spacing: 0.3px;
+.ar-burn-rate-badge {
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+    color: #fb7185;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
 }
 
 /* ==========================================================================
@@ -816,6 +948,275 @@ footer.wp-block-template-part,
 }
 
 /* ==========================================================================
+   Tab Content & Visibility
+   ========================================================================== */
+.ar-tab-content {
+    display: none;
+}
+.ar-tab-content.active {
+    display: block;
+    animation: ar-fade-in 0.25s ease-out;
+}
+@keyframes ar-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Plan Cards & Region Selector */
+.ar-plan-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+.ar-plan-card {
+    background: var(--ar-bg-surface);
+    border: 1px solid var(--ar-border-card);
+    border-radius: var(--ar-radius-lg);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+.ar-plan-card:hover {
+    border-color: var(--ar-primary);
+    background: var(--ar-bg-card);
+}
+.ar-plan-card:has(input[type="radio"]:checked) {
+    border-color: var(--ar-primary);
+    background: var(--ar-bg-card);
+    box-shadow: 0 0 16px var(--ar-primary-glow);
+}
+
+/* Server Card Meta Grid & Actions */
+.ar-server-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: var(--ar-bg-surface);
+    border-radius: var(--ar-radius-md);
+    padding: 14px;
+    margin: 16px 0;
+    border: 1px solid var(--ar-border-subtle);
+}
+.ar-server-meta-item span {
+    display: block;
+    font-size: 11px;
+    color: var(--ar-text-muted);
+    margin-bottom: 2px;
+}
+.ar-server-meta-item strong {
+    font-size: 13px;
+    color: var(--ar-text-primary);
+}
+.ar-server-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+/* Pricing Summary Box */
+.ar-pricing-summary-box {
+    background: var(--ar-bg-surface);
+    border: 1px solid var(--ar-border-card);
+    border-radius: var(--ar-radius-lg);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+/* Data Table alias */
+.ar-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    text-align: right;
+}
+.ar-data-table th {
+    background: var(--ar-table-head-bg);
+    color: var(--ar-text-muted);
+    padding: 14px 18px;
+    font-weight: 800;
+    border-bottom: 1px solid var(--ar-border-card);
+    white-space: nowrap;
+}
+.ar-data-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--ar-border-subtle);
+    color: var(--ar-text-secondary);
+    vertical-align: middle;
+}
+.ar-data-table tr:hover td {
+    background: var(--ar-bg-surface);
+    color: var(--ar-text-primary);
+}
+/* ==========================================================================
+   Agentic AI Copilot Chat Interface Styles
+   ========================================================================== */
+.ar-ai-avatar {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    border-radius: var(--ar-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ar-ai-quick-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+}
+.ar-ai-quick-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.ar-ai-chip {
+    background: var(--ar-bg-surface);
+    border: 1px solid var(--ar-border-card);
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ar-text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.ar-ai-chip:hover {
+    border-color: var(--ar-primary);
+    color: var(--ar-primary);
+    background: var(--ar-bg-card);
+    transform: translateY(-1px);
+}
+
+.ar-ai-chat-box {
+    min-height: 380px;
+    max-height: 520px;
+    overflow-y: auto;
+    background: var(--ar-bg-surface);
+    border: 1px solid var(--ar-border-subtle);
+    border-radius: var(--ar-radius-xl);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 20px;
+    scroll-behavior: smooth;
+}
+
+.ar-ai-msg {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+    animation: ar-fade-in 0.25s ease-out;
+}
+
+.ar-ai-msg-bot {
+    align-self: flex-start;
+}
+
+.ar-ai-msg-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.ar-ai-msg-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ar-bg-card);
+    border: 1px solid var(--ar-border-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.ar-ai-msg-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ar-ai-msg-content {
+    background: var(--ar-bg-card);
+    border: 1px solid var(--ar-border-card);
+    border-radius: var(--ar-radius-lg);
+    padding: 14px 18px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--ar-text-primary);
+    box-shadow: var(--ar-shadow-card);
+}
+
+.ar-ai-msg-user .ar-ai-msg-content {
+    background: linear-gradient(135deg, #00baba 0%, #087373 100%);
+    color: #06090e;
+    font-weight: 800;
+    border-color: rgba(0, 186, 186, 0.4);
+}
+
+/* Action Card within chat */
+.ar-ai-action-card {
+    background: var(--ar-bg-card);
+    border: 1.5px solid var(--ar-primary);
+    border-radius: var(--ar-radius-lg);
+    padding: 16px 20px;
+    box-shadow: 0 8px 24px var(--ar-primary-glow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.ar-ai-action-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--ar-border-subtle);
+    padding-bottom: 10px;
+}
+.ar-ai-action-btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Chat Input Bar */
+.ar-ai-input-wrap {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.ar-ai-input {
+    flex: 1;
+    height: 50px;
+    background: var(--ar-bg-input);
+    border: 1px solid var(--ar-border-card);
+    border-radius: var(--ar-radius-md);
+    padding: 0 20px;
+    font-size: 14px;
+    color: var(--ar-text-primary);
+    transition: all 0.2s ease;
+}
+.ar-ai-input:focus {
+    outline: none;
+    border-color: var(--ar-primary);
+    box-shadow: 0 0 0 3px rgba(0, 186, 186, 0.18);
+}
+
+/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 1280px) {
@@ -824,14 +1225,28 @@ footer.wp-block-template-part,
     }
 }
 
+@media (max-width: 1024px) {
+    .ar-sidebar {
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+        transform: translateX(100%);
+    }
+    .ar-sidebar.open {
+        transform: translateX(0);
+    }
+    .ar-mobile-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 @media (max-width: 768px) {
     .ar-top-navbar {
-        padding: 14px 20px;
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .ar-navbar-actions {
-        justify-content: space-between;
+        padding: 0 16px;
     }
     .ar-main-content {
         padding: 20px 16px 40px;
@@ -843,6 +1258,16 @@ footer.wp-block-template-part,
         grid-template-columns: 1fr;
     }
     .ar-view-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .ar-search-box {
+        min-width: 100%;
+    }
+    .ar-server-meta-grid {
+        grid-template-columns: 1fr;
+    }
+    .ar-pricing-summary-box {
         flex-direction: column;
         align-items: stretch;
     }

@@ -21,12 +21,22 @@ class Arvan_API_Client {
     }
 
     private function __construct() {
-        $this->api_key = get_option('arvan_api_key', '');
+        $raw_key = get_option('arvan_api_key', '');
+        $this->api_key = Arvan_Security::decrypt($raw_key);
         $this->is_mock = (get_option('arvan_mode', 'mock') === 'mock') || empty($this->api_key);
     }
 
     public function set_mode($mode) {
         $this->is_mock = ($mode === 'mock');
+    }
+
+    /**
+     * Reload Decrypted API Key from Settings
+     */
+    public function reload_credentials() {
+        $raw_key = get_option('arvan_api_key', '');
+        $this->api_key = Arvan_Security::decrypt($raw_key);
+        $this->is_mock = (get_option('arvan_mode', 'mock') === 'mock') || empty($this->api_key);
     }
 
     /**
@@ -170,13 +180,26 @@ class Arvan_API_Client {
     }
 
     /**
-     * Generic HTTP Request Wrapper
+     * Generic HTTP Request Wrapper with Security & Rate Limiting
      */
     private function request($method, $url, $body = null) {
+        // Rate Limiting Enforcement
+        $limiter = Arvan_Rate_Limiter::get_instance();
+        $rate_check = $limiter->check_limit($this->api_key);
+
+        if (!$rate_check['allowed']) {
+            return array(
+                'error' => true,
+                'code' => 429,
+                'message' => "محدودیت نرخ درخواست (Rate Limit: {$rate_check['max_rpm']} req/min). لطفاً {$rate_check['retry_after']} ثانیه دیگر مجدداً تلاش نمایید.",
+                'retry_after' => $rate_check['retry_after']
+            );
+        }
+
         $args = array(
             'method' => $method,
             'headers' => array(
-                'Authorization' => 'Apikey ' . $this->api_key,
+                'Authorization' => (strpos($this->api_key, 'Apikey') === 0) ? $this->api_key : 'Apikey ' . $this->api_key,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ),
@@ -187,9 +210,12 @@ class Arvan_API_Client {
             $args['body'] = json_encode($body);
         }
 
+        $start_time = microtime(true);
         $response = wp_remote_request($url, $args);
+        $latency = round((microtime(true) - $start_time) * 1000);
 
         if (is_wp_error($response)) {
+            $limiter->record_stat('throttled', $latency);
             return array('error' => true, 'message' => $response->get_error_message());
         }
 
@@ -197,9 +223,13 @@ class Arvan_API_Client {
         $data = json_decode(wp_remote_retrieve_body($response), true);
 
         if ($code >= 400) {
+            if ($code === 429) {
+                $limiter->record_stat('throttled', $latency);
+            }
             return array('error' => true, 'code' => $code, 'message' => isset($data['message']) ? $data['message'] : 'API Error');
         }
 
+        $limiter->record_stat('success', $latency);
         return $data;
     }
 }

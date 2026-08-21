@@ -39,7 +39,8 @@
                 nonce: ArvanAdmin.nonce,
                 api_key: $('#arvan_setting_api_key').val(),
                 mode: $('#arvan_setting_mode').val(),
-                margin: $('#arvan_setting_margin').val()
+                margin: $('#arvan_setting_margin').val(),
+                rate_limit_rpm: $('#arvan_setting_rpm').val()
             }, function(res) {
                 $btn.prop('disabled', false).text('💾 ذخیره تنظیمات ریسلری');
                 if (res.success) {

@@ -21,7 +21,14 @@ class Arvan_Frontend {
         // Customer AJAX Actions
         add_action('wp_ajax_arvan_customer_create_server', array($this, 'ajax_create_server'));
         add_action('wp_ajax_arvan_customer_toggle_power', array($this, 'ajax_toggle_power'));
+        add_action('wp_ajax_arvan_customer_power_action', array($this, 'ajax_toggle_power'));
         add_action('wp_ajax_arvan_customer_deposit', array($this, 'ajax_customer_deposit'));
+
+        // AI Agentic Copilot AJAX Actions
+        add_action('wp_ajax_arvan_ai_chat_message', array($this, 'ajax_ai_chat_message'));
+        add_action('wp_ajax_nopriv_arvan_ai_chat_message', array($this, 'ajax_ai_chat_message'));
+        add_action('wp_ajax_arvan_ai_deploy_server', array($this, 'ajax_ai_deploy_server'));
+        add_action('wp_ajax_nopriv_arvan_ai_deploy_server', array($this, 'ajax_ai_deploy_server'));
     }
 
     public function enqueue_frontend_assets() {
@@ -189,4 +196,38 @@ class Arvan_Frontend {
             'new_balance' => $res['balance_after']
         ));
     }
+
+    public function ajax_ai_chat_message() {
+        check_ajax_referer('arvan_frontend_nonce', 'nonce');
+        $user_id = get_current_user_id() ?: 1;
+        $message = isset($_POST['message']) ? sanitize_text_field($_POST['message']) : '';
+
+        if (empty($message)) {
+            wp_send_json_error('متن پیام نمی‌تواند خالی باشد.');
+        }
+
+        $agent = Arvan_AI_Agent::get_instance();
+        $result = $agent->process_message($user_id, $message);
+        wp_send_json_success($result);
+    }
+
+    public function ajax_ai_deploy_server() {
+        check_ajax_referer('arvan_frontend_nonce', 'nonce');
+        $user_id = get_current_user_id() ?: 1;
+
+        $flavor_id = isset($_POST['flavor_id']) ? sanitize_text_field($_POST['flavor_id']) : '';
+        $region = isset($_POST['region']) ? sanitize_text_field($_POST['region']) : 'ir-thr-at1';
+        $image_id = isset($_POST['image_id']) ? sanitize_text_field($_POST['image_id']) : 'img-ubuntu-24';
+        $hostname = isset($_POST['hostname']) ? sanitize_text_field($_POST['hostname']) : ('ai-server-' . rand(100, 999));
+
+        $agent = Arvan_AI_Agent::get_instance();
+        $result = $agent->process_message($user_id, 'بساز', $flavor_id, $region, $image_id, $hostname);
+
+        if ($result['type'] === 'insufficient_balance' || $result['type'] === 'error') {
+            wp_send_json_error($result);
+        } else {
+            wp_send_json_success($result);
+        }
+    }
 }
+
