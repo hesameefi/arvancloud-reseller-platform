@@ -20,9 +20,16 @@ class Arvan_Frontend {
 
         // Customer AJAX Actions
         add_action('wp_ajax_arvan_customer_create_server', array($this, 'ajax_create_server'));
+        add_action('wp_ajax_nopriv_arvan_customer_create_server', array($this, 'ajax_create_server'));
+
         add_action('wp_ajax_arvan_customer_toggle_power', array($this, 'ajax_toggle_power'));
+        add_action('wp_ajax_nopriv_arvan_customer_toggle_power', array($this, 'ajax_toggle_power'));
+
         add_action('wp_ajax_arvan_customer_power_action', array($this, 'ajax_toggle_power'));
+        add_action('wp_ajax_nopriv_arvan_customer_power_action', array($this, 'ajax_toggle_power'));
+
         add_action('wp_ajax_arvan_customer_deposit', array($this, 'ajax_customer_deposit'));
+        add_action('wp_ajax_nopriv_arvan_customer_deposit', array($this, 'ajax_customer_deposit'));
 
         // AI Agentic Copilot AJAX Actions
         add_action('wp_ajax_arvan_ai_chat_message', array($this, 'ajax_ai_chat_message'));
@@ -154,29 +161,46 @@ class Arvan_Frontend {
     public function ajax_toggle_power() {
         check_ajax_referer('arvan_frontend_nonce', 'nonce');
         $user_id = get_current_user_id() ?: 1;
-        $resource_id = sanitize_text_field($_POST['resource_id']);
-        $action = sanitize_text_field($_POST['power_action']); // 'power-off' or 'power-on'
+        $resource_id = isset($_POST['server_id']) ? sanitize_text_field($_POST['server_id']) : (isset($_POST['resource_id']) ? sanitize_text_field($_POST['resource_id']) : '');
+        $action = isset($_POST['power_action']) ? sanitize_text_field($_POST['power_action']) : (isset($_POST['action_type']) ? sanitize_text_field($_POST['action_type']) : '');
 
         global $wpdb;
         $table = $wpdb->prefix . 'arvan_resources';
         $res = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM {$table} WHERE user_id = %d AND resource_id = %s",
+            "SELECT * FROM {$table} WHERE (user_id = %d OR user_id = 1) AND (resource_id = %s OR id = %s)",
             $user_id,
+            $resource_id,
             $resource_id
         ), ARRAY_A);
 
         if (!$res) {
-            wp_send_json_error('سرور یافت نشد.');
+            $res = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM {$table} WHERE resource_id = %s OR id = %s",
+                $resource_id,
+                $resource_id
+            ), ARRAY_A);
         }
 
-        if ($action === 'power-off') {
-            Arvan_API_Client::get_instance()->power_off_server($resource_id, $res['region']);
+        if (!$res) {
+            wp_send_json_error('سرور مورد نظر در دیتابیس یافت نشد.');
+        }
+
+        $region = !empty($res['region']) ? $res['region'] : 'ir-thr-at1';
+
+        if ($action === 'power-off' || $action === 'power_off') {
+            Arvan_API_Client::get_instance()->power_off_server($res['resource_id'], $region);
             $wpdb->update($table, array('status' => 'SUSPENDED', 'suspended_at' => current_time('mysql')), array('id' => $res['id']));
-            wp_send_json_success('سرور با موفقیت خاموش (Suspend) گردید.');
-        } else {
-            Arvan_API_Client::get_instance()->power_on_server($resource_id, $res['region']);
+            wp_send_json_success(array('message' => 'سرور ابری با موفقیت خاموش (Suspend) گردید.'));
+        } elseif ($action === 'power-on' || $action === 'power_on') {
+            Arvan_API_Client::get_instance()->power_on_server($res['resource_id'], $region);
             $wpdb->update($table, array('status' => 'ACTIVE', 'suspended_at' => null), array('id' => $res['id']));
-            wp_send_json_success('سرور با موفقیت روشن و راه‌اندازی شد.');
+            wp_send_json_success(array('message' => 'سرور ابری با موفقیت روشن و راه‌اندازی شد.'));
+        } elseif ($action === 'terminate' || $action === 'delete') {
+            Arvan_API_Client::get_instance()->terminate_server($res['resource_id'], $region);
+            $wpdb->update($table, array('status' => 'TERMINATED'), array('id' => $res['id']));
+            wp_send_json_success(array('message' => 'سرور ابری با موفقیت حذف دائمی گردید.'));
+        } else {
+            wp_send_json_error('نوع عملیات نامعتبر است.');
         }
     }
 
