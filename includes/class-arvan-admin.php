@@ -25,6 +25,7 @@ class Arvan_Admin {
         add_action('wp_ajax_arvan_reset_demo_data', array($this, 'ajax_reset_demo_data'));
         add_action('wp_ajax_arvan_admin_delete_server', array($this, 'ajax_admin_delete_server'));
         add_action('wp_ajax_arvan_admin_edit_server', array($this, 'ajax_admin_edit_server'));
+        add_action('wp_ajax_arvan_set_global_theme', array($this, 'ajax_set_global_theme'));
     }
 
     public function register_admin_menus() {
@@ -279,4 +280,17 @@ class Arvan_Admin {
 
         wp_send_json_success('اطلاعات سرور با موفقیت ویرایش شد.');
     }
+
+    public function ajax_set_global_theme() {
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('دسترسی غیرمجاز');
+        }
+        $theme = sanitize_text_field($_POST['theme'] ?? 'dark');
+        if (!in_array($theme, array('light', 'dark'), true)) {
+            $theme = 'dark';
+        }
+        update_option('arvan_global_theme', $theme);
+        wp_send_json_success(array('theme' => $theme));
+    }
+
 }

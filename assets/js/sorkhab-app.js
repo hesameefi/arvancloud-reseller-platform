@@ -2,17 +2,35 @@
     'use strict';
 
     $(document).ready(function() {
-        // 1. Dual Theme Switcher (Dark & Light)
-        var savedTheme = localStorage.getItem('arvan_theme') || 'dark';
-        $('html').attr('data-theme', savedTheme);
-        updateThemeToggleBtn(savedTheme);
+        // 1. Dual Theme Switcher (Dark & Light) with Global Sync
+        function applyCustomerTheme(theme, saveServer) {
+            $('html, body, #arvan_dashboard_app, .ar-saas-layout').attr('data-theme', theme);
+            if (theme === 'dark') {
+                $('body').addClass('arvan-dark-theme arvan-admin-dark-theme').removeClass('arvan-light-theme');
+            } else {
+                $('body').addClass('arvan-light-theme').removeClass('arvan-dark-theme arvan-admin-dark-theme');
+            }
+            localStorage.setItem('arvan_theme', theme);
+            localStorage.setItem('arvan_admin_theme', theme);
+            updateThemeToggleBtn(theme);
 
-        $(document).on('click', '#ar_theme_toggle_btn, #arvan_admin_theme_toggle', function() {
-            var currentTheme = $('html').attr('data-theme') || 'dark';
+            if (saveServer && typeof ArvanFrontend !== 'undefined' && ArvanFrontend.ajax_url) {
+                $.post(ArvanFrontend.ajax_url, {
+                    action: 'arvan_set_global_theme',
+                    nonce: ArvanFrontend.nonce,
+                    theme: theme
+                });
+            }
+        }
+
+        var savedTheme = localStorage.getItem('arvan_theme') || $('#arvan_dashboard_app').attr('data-theme') || 'dark';
+        applyCustomerTheme(savedTheme, false);
+
+        $(document).on('click', '#ar_theme_toggle_btn', function(e) {
+            e.preventDefault();
+            var currentTheme = $('html').attr('data-theme') || $('#arvan_dashboard_app').attr('data-theme') || 'dark';
             var nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-            $('html').attr('data-theme', nextTheme);
-            localStorage.setItem('arvan_theme', nextTheme);
-            updateThemeToggleBtn(nextTheme);
+            applyCustomerTheme(nextTheme, true);
         });
 
         function updateThemeToggleBtn(theme) {

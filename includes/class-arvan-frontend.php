@@ -559,5 +559,14 @@ class Arvan_Frontend {
         $res = $agent->process_message($user_id, 'عیب‌یابی خطای ۵۰۲ و پورت سرور');
         wp_send_json_success($res);
     }
-}
 
+    public function ajax_set_global_theme() {
+        $theme = sanitize_text_field($_POST['theme'] ?? 'dark');
+        if (!in_array($theme, array('light', 'dark'), true)) {
+            $theme = 'dark';
+        }
+        update_option('arvan_global_theme', $theme);
+        wp_send_json_success(array('theme' => $theme));
+    }
+
+}

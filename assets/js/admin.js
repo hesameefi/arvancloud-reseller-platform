@@ -2,35 +2,45 @@
     'use strict';
 
     // Instant theme application without flicker
-    var savedAdminTheme = localStorage.getItem('arvan_admin_theme') || 'dark';
+    var savedAdminTheme = localStorage.getItem('arvan_theme') || localStorage.getItem('arvan_admin_theme') || 'dark';
+    $('html, body, .arvan-admin-wrap, #arvan_dashboard_app, .ar-saas-layout').attr('data-theme', savedAdminTheme);
     if (savedAdminTheme === 'dark') {
-        $('body').addClass('arvan-admin-dark-theme');
-        $('.arvan-admin-wrap').attr('data-theme', 'dark');
+        $('body').addClass('arvan-admin-dark-theme arvan-dark-theme').removeClass('arvan-light-theme');
+    } else {
+        $('body').addClass('arvan-light-theme').removeClass('arvan-admin-dark-theme arvan-dark-theme');
     }
 
     $(document).ready(function() {
-        // Admin Dual Theme Switcher
-        function applyAdminTheme(theme) {
+        // Admin Dual Theme Switcher & Global Sync
+        function applyAdminTheme(theme, saveServer) {
+            $('html, body, .arvan-admin-wrap, #arvan_dashboard_app, .ar-saas-layout').attr('data-theme', theme);
             if (theme === 'dark') {
-                $('body').addClass('arvan-admin-dark-theme');
-                $('.arvan-admin-wrap').attr('data-theme', 'dark');
+                $('body').addClass('arvan-admin-dark-theme arvan-dark-theme').removeClass('arvan-light-theme');
                 $('#arvan_admin_theme_toggle').html('☀️ تم روشن');
             } else {
-                $('body').removeClass('arvan-admin-dark-theme');
-                $('.arvan-admin-wrap').attr('data-theme', 'light');
+                $('body').addClass('arvan-light-theme').removeClass('arvan-admin-dark-theme arvan-dark-theme');
                 $('#arvan_admin_theme_toggle').html('🌙 تم تاریک');
             }
+            localStorage.setItem('arvan_theme', theme);
             localStorage.setItem('arvan_admin_theme', theme);
+
+            if (saveServer && typeof ArvanAdmin !== 'undefined' && ArvanAdmin.ajax_url) {
+                $.post(ArvanAdmin.ajax_url, {
+                    action: 'arvan_set_global_theme',
+                    nonce: ArvanAdmin.nonce,
+                    theme: theme
+                });
+            }
         }
 
-        var activeTheme = localStorage.getItem('arvan_admin_theme') || 'dark';
-        applyAdminTheme(activeTheme);
+        var activeTheme = localStorage.getItem('arvan_theme') || localStorage.getItem('arvan_admin_theme') || 'dark';
+        applyAdminTheme(activeTheme, false);
 
         $(document).on('click', '#arvan_admin_theme_toggle', function(e) {
             e.preventDefault();
-            var current = $('body').hasClass('arvan-admin-dark-theme') ? 'dark' : 'light';
+            var current = $('body').hasClass('arvan-admin-dark-theme') || $('body').hasClass('arvan-dark-theme') ? 'dark' : 'light';
             var next = (current === 'light') ? 'dark' : 'light';
-            applyAdminTheme(next);
+            applyAdminTheme(next, true);
         });
 
         // Save Settings AJAX

@@ -1,3 +1,14 @@
+<script>
+(function() {
+    var savedTheme = localStorage.getItem('arvan_theme') || '<?php echo esc_js($global_theme); ?>';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    if (document.body) {
+        document.body.setAttribute('data-theme', savedTheme);
+        document.body.classList.remove('arvan-dark-theme', 'arvan-light-theme');
+        document.body.classList.add('arvan-' + savedTheme + '-theme');
+    }
+})();
+</script>
 <?php
 if (!defined('ABSPATH')) {
     exit;
@@ -21,9 +32,10 @@ $runway_days = round($runway_hours / 24, 1);
 
 // Telemetry & Rate Limiting Status
 $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
+$global_theme = get_option('arvan_global_theme', 'dark');
 ?>
 
-<div class="ar-saas-layout" id="arvan_dashboard_app">
+<div class="ar-saas-layout" id="arvan_dashboard_app" data-theme="<?php echo esc_attr($global_theme); ?>">
     <!-- Right Sidebar (سایدبار عمودی راست با طراحی داشبوردی سرخ‌آب) -->
     <aside class="ar-sidebar" id="ar_sidebar">
         <div class="ar-sidebar-brand">

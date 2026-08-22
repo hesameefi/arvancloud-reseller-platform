@@ -46,7 +46,7 @@
 /* ==========================================================================
    Dual Theme Color Tokens (Official Sorkhab Design System)
    ========================================================================== */
-:root, [data-theme="dark"] {
+:root, [data-theme="dark"], html[data-theme="dark"], body[data-theme="dark"], body.arvan-admin-dark-theme, body.arvan-dark-theme, .ar-saas-layout[data-theme="dark"], .arvan-admin-wrap[data-theme="dark"] {
     --ar-primary: #00baba;
     --ar-primary-hover: #00d6d6;
     --ar-primary-glow: rgba(0, 186, 186, 0.25);
@@ -86,7 +86,7 @@
     --ar-table-head-bg: #090e15;
 }
 
-[data-theme="light"] {
+[data-theme="light"], html[data-theme="light"], body[data-theme="light"], body.arvan-light-theme, .ar-saas-layout[data-theme="light"], .arvan-admin-wrap[data-theme="light"] {
     --ar-primary: #00baba;
     --ar-primary-hover: #009b9b;
     --ar-primary-glow: rgba(0, 186, 186, 0.25);
@@ -1640,4 +1640,114 @@ footer.wp-block-template-part,
     color: #ffffff !important;
     border-color: #ef4444 !important;
     transform: scale(1.08) !important;
+}
+
+
+/* ==========================================================================
+   Full Universal Light Theme Overrides (Zero Glitch Guarantee)
+   ========================================================================== */
+html[data-theme="light"] body,
+body[data-theme="light"],
+body.arvan-light-theme,
+.ar-saas-layout[data-theme="light"] {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .ar-saas-layout {
+    background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .ar-sidebar {
+    background: #ffffff !important;
+    border-left: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .ar-top-navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .ar-bento-card,
+[data-theme="light"] .ar-server-card,
+[data-theme="light"] .ar-card,
+[data-theme="light"] .ar-pricing-tier-card,
+[data-theme="light"] .ar-wizard-card,
+[data-theme="light"] .ar-sidebar-wallet-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .ar-bento-value,
+[data-theme="light"] .ar-server-title h3,
+[data-theme="light"] .ar-brand-text h2,
+[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, [data-theme="light"] h4 {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .ar-bento-title,
+[data-theme="light"] .ar-text-secondary,
+[data-theme="light"] .ar-server-meta-list li {
+    color: #475569 !important;
+}
+
+[data-theme="light"] .ar-server-meta-list strong {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .ar-sidebar-nav-item {
+    color: #475569 !important;
+}
+[data-theme="light"] .ar-sidebar-nav-item:hover {
+    background: #f1f5f9 !important;
+    color: #00baba !important;
+}
+[data-theme="light"] .ar-sidebar-nav-item.active {
+    background: rgba(0, 186, 186, 0.12) !important;
+    color: #00baba !important;
+}
+
+[data-theme="light"] .ar-chip,
+[data-theme="light"] .ar-nav-pills,
+[data-theme="light"] .ar-view-toggle {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .ar-table-responsive-wrapper table thead th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .ar-table-responsive-wrapper table tbody tr {
+    background: #ffffff !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+[data-theme="light"] .ar-table-responsive-wrapper table tbody tr:hover {
+    background: #f8fafc !important;
+}
+
+[data-theme="light"] .ar-search-input,
+[data-theme="light"] .ar-input,
+[data-theme="light"] .ar-select {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .ar-modal-box {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    color: #0f172a !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="light"] .ar-modal-header {
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+[data-theme="light"] .ar-modal-footer {
+    border-top: 1px solid #e2e8f0 !important;
+    background: #f8fafc !important;
 }
