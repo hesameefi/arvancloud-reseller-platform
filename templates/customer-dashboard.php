@@ -126,39 +126,39 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
             <!-- Bento Metrics Dashboard (4 KPI Tiles) -->
             <section class="ar-bento-grid">
                 <div class="ar-bento-card">
-                    <div class="ar-bento-icon" style="color: #38bdf8;">🖥️</div>
-                    <div class="ar-bento-data">
+                    <div class="ar-bento-card-top">
                         <div class="ar-bento-title">ابرک‌های ابری فعال</div>
-                        <div class="ar-bento-value"><?php echo $active_servers_count; ?> <span style="font-size: 13px; font-weight: normal; color: var(--ar-text-muted);">از <?php echo count($user_servers); ?> سرور</span></div>
-                        <div class="ar-bento-sub" style="color: var(--ar-status-success);">● ۱۰۰٪ وضعیت نرمال و آنلاین</div>
+                        <div class="ar-bento-icon" style="color: #38bdf8; background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.25);">🖥️</div>
                     </div>
+                    <div class="ar-bento-value"><?php echo $active_servers_count; ?> <span style="font-size: 13px; font-weight: 500; color: var(--ar-text-muted);">از <?php echo count($user_servers); ?> سرور</span></div>
+                    <div class="ar-bento-sub" style="color: #34d399;">● وضعیت پایدار و آنلاین</div>
                 </div>
 
                 <div class="ar-bento-card">
-                    <div class="ar-bento-icon" style="color: #f43f5e;">⚡</div>
-                    <div class="ar-bento-data">
-                        <div class="ar-bento-title">مجموع مصرف ساعتی (Burn Rate)</div>
-                        <div class="ar-bento-value"><?php echo number_format($total_hourly_burn); ?> <span style="font-size: 12px; font-weight: normal; color: var(--ar-text-muted);">تومان/ساعت</span></div>
-                        <div class="ar-bento-sub">کسر خودکار بر اساس ثانیه مصرف</div>
+                    <div class="ar-bento-card-top">
+                        <div class="ar-bento-title">مصرف ساعتی (Burn Rate)</div>
+                        <div class="ar-bento-icon" style="color: #f43f5e; background: rgba(244, 63, 94, 0.12); border-color: rgba(244, 63, 94, 0.25);">⚡</div>
                     </div>
+                    <div class="ar-bento-value"><?php echo number_format($total_hourly_burn); ?> <span style="font-size: 12px; font-weight: 500; color: var(--ar-text-muted);">تومان/ساعت</span></div>
+                    <div class="ar-bento-sub">کسر خودکار مصرف لحظه‌ای</div>
                 </div>
 
                 <div class="ar-bento-card">
-                    <div class="ar-bento-icon" style="color: #10b981;">💳</div>
-                    <div class="ar-bento-data">
+                    <div class="ar-bento-card-top">
                         <div class="ar-bento-title">موجودی در دسترس</div>
-                        <div class="ar-bento-value" style="color: var(--ar-primary);"><?php echo number_format($balance_num); ?> <span style="font-size: 12px; font-weight: normal; color: var(--ar-text-muted);">تومان</span></div>
-                        <div class="ar-bento-sub">کیف پول پیش‌پرداخت ارزی-ریالی</div>
+                        <div class="ar-bento-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.25);">💳</div>
                     </div>
+                    <div class="ar-bento-value" style="color: #00d2d2;"><?php echo number_format($balance_num); ?> <span style="font-size: 12px; font-weight: 500; color: var(--ar-text-muted);">تومان</span></div>
+                    <div class="ar-bento-sub">کیف پول پیش‌پرداخت</div>
                 </div>
 
                 <div class="ar-bento-card">
-                    <div class="ar-bento-icon" style="color: #a855f7;">⏳</div>
-                    <div class="ar-bento-data">
-                        <div class="ar-bento-title">مدت زمان بقای سرویس (Runway)</div>
-                        <div class="ar-bento-value"><?php echo ($total_hourly_burn > 0) ? ($runway_hours . ' <small style="font-size: 13px; font-weight: normal;">ساعت</small>') : 'نامحدود'; ?></div>
-                        <div class="ar-bento-sub"><?php echo ($total_hourly_burn > 0) ? ("تقریباً {$runway_days} روز کاری") : 'بدون مصرف ساعتی فعال'; ?></div>
+                    <div class="ar-bento-card-top">
+                        <div class="ar-bento-title">مدت بقای سرویس (Runway)</div>
+                        <div class="ar-bento-icon" style="color: #a855f7; background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.25);">⏳</div>
                     </div>
+                    <div class="ar-bento-value"><?php echo ($total_hourly_burn > 0) ? ($runway_hours . ' <small style="font-size: 13px; font-weight: 500;">ساعت</small>') : 'نامحدود'; ?></div>
+                    <div class="ar-bento-sub"><?php echo ($total_hourly_burn > 0) ? ("تقریباً {$runway_days} روز کاری") : 'بدون مصرف فعال'; ?></div>
                 </div>
             </section>
 
@@ -242,16 +242,24 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                                 <div class="ar-server-actions">
                                     <?php if ($is_active): ?>
                                         <button type="button" class="ar-btn ar-btn-danger ar-action-btn" data-action="power_off" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">
-                                            ⏹ خاموش کردن
+                                            ⏹ خاموش
                                         </button>
                                     <?php else: ?>
                                         <button type="button" class="ar-btn ar-btn-primary ar-action-btn" data-action="power_on" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">
-                                            ▶ روشن کردن
+                                            ▶ روشن
                                         </button>
                                     <?php endif; ?>
 
-                                    <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" title="مشاهده کنسول لاگ و وب‌ترمینال">
-                                        💻 وب کنسول
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-upgrade-srv-btn" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" data-flavor="<?php echo esc_attr($srv['flavor_id']); ?>" data-price="<?php echo esc_attr($srv['hourly_customer_price']); ?>" title="تغییر اندازه و ارتقای پلن سخت‌افزاری">
+                                        ⚡ ارتقا
+                                    </button>
+
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-edit-srv-btn" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" title="ویرایش نام سرور">
+                                        ✏️ ویرایش
+                                    </button>
+
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" title="وب کنسول">
+                                        💻 کنسول
                                     </button>
 
                                     <button type="button" class="ar-btn ar-btn-secondary ar-action-btn" data-action="terminate" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" style="color: #ef4444;" title="حذف دائمی سرور">
@@ -298,6 +306,8 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                                                 <?php else: ?>
                                                     <button type="button" class="ar-btn ar-btn-primary ar-action-btn" style="padding: 4px 8px; font-size: 11px;" data-action="power_on" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">روشن</button>
                                                 <?php endif; ?>
+                                                <button type="button" class="ar-btn ar-btn-secondary ar-upgrade-srv-btn" style="padding: 4px 8px; font-size: 11px;" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" data-flavor="<?php echo esc_attr($srv['flavor_id']); ?>" data-price="<?php echo esc_attr($srv['hourly_customer_price']); ?>" title="تغییر پلن سخت‌افزاری">⚡ ارتقا</button>
+                                                <button type="button" class="ar-btn ar-btn-secondary ar-edit-srv-btn" style="padding: 4px 8px; font-size: 11px;" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" title="ویرایش نام">✏️ ویرایش</button>
                                                 <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" style="padding: 4px 8px; font-size: 11px;" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>">کنسول</button>
                                             </div>
                                         </td>
@@ -360,15 +370,23 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                         <div class="ar-form-group">
                             <label class="ar-form-label" for="ar_flavor_select">۲. پلن سخت‌افزاری و منابع پردازشی (Hardware Flavor):</label>
                             <select id="ar_flavor_select" class="ar-select" required>
-                                <?php foreach ($flavors as $flv): 
-                                    $reseller_margin = floatval(get_option('arvan_reseller_margin', 20));
-                                    $cust_hourly = round($flv['hourly_price'] * (1 + ($reseller_margin / 100)));
-                                    $cust_monthly = $cust_hourly * 720;
+                                <?php 
+                                if (!empty($flavors) && is_array($flavors)) {
+                                    foreach ($flavors as $flv): 
+                                        if (!is_array($flv) || !isset($flv['id'])) continue;
+                                        $reseller_margin = floatval(get_option('arvan_reseller_margin', 20));
+                                        $base_h = isset($flv['hourly_price']) ? floatval($flv['hourly_price']) : 450;
+                                        $cust_hourly = round($base_h * (1 + ($reseller_margin / 100)));
+                                        $cust_monthly = $cust_hourly * 720;
+                                        $flv_name = isset($flv['name']) ? $flv['name'] : $flv['id'];
                                 ?>
-                                    <option value="<?php echo esc_attr($flv['id']); ?>" data-name="<?php echo esc_attr($flv['name']); ?>" data-hourly="<?php echo esc_attr($cust_hourly); ?>" data-monthly="<?php echo esc_attr($cust_monthly); ?>">
-                                        <?php echo esc_html($flv['name']); ?> — [ <?php echo number_format($cust_hourly); ?> تومان/ساعت | ~<?php echo number_format($cust_monthly); ?> تومان/ماه ]
+                                    <option value="<?php echo esc_attr($flv['id']); ?>" data-name="<?php echo esc_attr($flv_name); ?>" data-hourly="<?php echo esc_attr($cust_hourly); ?>" data-monthly="<?php echo esc_attr($cust_monthly); ?>">
+                                        <?php echo esc_html($flv_name); ?> — [ <?php echo number_format($cust_hourly); ?> تومان/ساعت | ~<?php echo number_format($cust_monthly); ?> تومان/ماه ]
                                     </option>
-                                <?php endforeach; ?>
+                                <?php 
+                                    endforeach; 
+                                }
+                                ?>
                             </select>
                         </div>
 
@@ -376,11 +394,20 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                         <div class="ar-form-group">
                             <label class="ar-form-label" for="ar_image_select">۳. سیستم‌عامل و پلتفرم اجرایی (OS Image):</label>
                             <select id="ar_image_select" class="ar-select" required>
-                                <?php foreach ($images as $img): ?>
+                                <?php 
+                                if (!empty($images) && is_array($images)) {
+                                    foreach ($images as $img): 
+                                        if (!is_array($img) || !isset($img['id'])) continue;
+                                        $img_name = isset($img['name']) ? $img['name'] : $img['id'];
+                                        $img_os = isset($img['os']) ? $img['os'] : 'Linux';
+                                ?>
                                     <option value="<?php echo esc_attr($img['id']); ?>">
-                                        <?php echo esc_html($img['name']); ?> (<?php echo esc_html($img['os']); ?>)
+                                        <?php echo esc_html($img_name); ?> (<?php echo esc_html($img_os); ?>)
                                     </option>
-                                <?php endforeach; ?>
+                                <?php 
+                                    endforeach; 
+                                }
+                                ?>
                             </select>
                         </div>
 
@@ -467,7 +494,7 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                             <label class="ar-form-label">ایجاد باکت جدید (New Bucket):</label>
                             <div style="display: flex; gap: 10px;">
                                 <input type="text" id="ar_s3_bucket_input" class="ar-input" placeholder="my-app-uploads" dir="ltr">
-                                <button type="button" class="ar-btn ar-btn-primary" onclick="alert('✅ باکت جدید در دیتاسنتر تهران با موفقیت ساخته شد.');">
+                                <button type="button" id="ar_btn_create_bucket_submit" class="ar-btn ar-btn-primary">
                                     ایجاد باکت
                                 </button>
                             </div>
@@ -475,13 +502,11 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
 
                         <div style="background: var(--ar-bg-surface); border-radius: 10px; padding: 14px; margin-top: 16px;">
                             <div style="font-size: 12.5px; font-weight: 800; margin-bottom: 8px;">باکت‌های ذخیره‌سازی ابری:</div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; border-bottom: 1px dashed var(--ar-border-subtle); padding-bottom: 8px;">
-                                <span dir="ltr">🗂️ <strong>media-assets-prod</strong></span>
-                                <span style="color: var(--ar-text-muted);">۳۴.۲ گیگابایت مصرف</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; padding-top: 8px;">
-                                <span dir="ltr">🗂️ <strong>db-nightly-backups</strong></span>
-                                <span style="color: var(--ar-text-muted);">۱۲.۸ گیگابایت مصرف</span>
+                            <div id="ar_s3_buckets_list">
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; border-bottom: 1px dashed var(--ar-border-subtle); padding-bottom: 8px;">
+                                    <span dir="ltr">🗂️ <strong>media-assets-prod</strong> (ir-thr-at1)</span>
+                                    <span style="color: var(--ar-status-success); font-weight: 700;">● فعال (S3 Endpoint)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -691,6 +716,74 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
 
                 <button type="submit" class="ar-btn ar-btn-primary" style="width: 100%; padding: 14px; font-size: 15px; font-weight: 800;">
                     💳 پرداخت آنلاین و افزایش آنی موجودی
+                </button>
+            </form>
+        </div>
+    </div>
+
+    
+    <!-- Upgrade / Resize Server Modal -->
+    <div class="ar-modal-backdrop" id="ar_upgrade_srv_modal">
+        <div class="ar-modal-box" style="max-width: 540px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--ar-border-subtle); padding-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: var(--ar-text-main);">
+                    ⚡ ارتقا و تغییر پلن سخت‌افزاری ابرک
+                </h3>
+                <button type="button" class="ar-close-modal" style="background: none; border: none; font-size: 22px; color: var(--ar-text-muted); cursor: pointer;">&times;</button>
+            </div>
+
+            <form id="ar_upgrade_srv_form">
+                <input type="hidden" id="ar_upgrade_server_id" value="">
+                
+                <div style="background: var(--ar-bg-surface); border: 1px solid var(--ar-border-card); border-radius: 12px; padding: 14px; margin-bottom: 18px;">
+                    <div style="font-size: 12px; color: var(--ar-text-muted); margin-bottom: 4px;">سرور انتخابی:</div>
+                    <strong id="ar_upgrade_server_name_display" style="font-size: 15px; color: var(--ar-primary);"></strong>
+                </div>
+
+                <div class="ar-form-group">
+                    <label class="ar-form-label" for="ar_upgrade_flavor_select">انتخاب پلن سخت‌افزاری جدید:</label>
+                    <select id="ar_upgrade_flavor_select" class="ar-select" required>
+                        <?php foreach ($flavors as $flv): 
+                            $flv_price = round($flv['hourly_price'] * (1 + ($margin / 100)));
+                        ?>
+                            <option value="<?php echo esc_attr($flv['id']); ?>" data-price="<?php echo $flv_price; ?>" data-cpu="<?php echo $flv['cpu']; ?>" data-ram="<?php echo $flv['memory']; ?>" data-disk="<?php echo $flv['disk']; ?>">
+                                <?php echo esc_html($flv['name']); ?> (<?php echo number_format($flv_price); ?> تومان/ساعت)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div style="background: rgba(0, 186, 186, 0.08); border: 1px solid rgba(0, 186, 186, 0.25); border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; font-size: 12.5px; color: var(--ar-text-sec); line-height: 1.6;">
+                    💡 <strong>توجه فنی:</strong> هایپروایزر ابری پس از تایید، دیسک و پردازنده‌های جدید را تخصیص داده و سرور را به صورت ایمن راه‌اندازی مجدد (Reboot) می‌نماید.
+                </div>
+
+                <button type="submit" id="ar_btn_submit_upgrade" class="ar-btn ar-btn-primary" style="width: 100%; padding: 13px; font-size: 14.5px; font-weight: 800;">
+                    🚀 تایید و ارتقای آنی سرور
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rename Server Modal -->
+    <div class="ar-modal-backdrop" id="ar_rename_srv_modal">
+        <div class="ar-modal-box" style="max-width: 460px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--ar-border-subtle); padding-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: var(--ar-text-main);">
+                    ✏️ ویرایش نام و هاست‌نیم سرور
+                </h3>
+                <button type="button" class="ar-close-modal" style="background: none; border: none; font-size: 22px; color: var(--ar-text-muted); cursor: pointer;">&times;</button>
+            </div>
+
+            <form id="ar_rename_srv_form">
+                <input type="hidden" id="ar_rename_server_id" value="">
+                
+                <div class="ar-form-group">
+                    <label class="ar-form-label" for="ar_rename_server_input">نام جدید سرور:</label>
+                    <input type="text" id="ar_rename_server_input" class="ar-input" placeholder="مثال: web-production-master" required>
+                </div>
+
+                <button type="submit" id="ar_btn_submit_rename" class="ar-btn ar-btn-primary" style="width: 100%; padding: 12px; font-size: 14px; font-weight: 800;">
+                    💾 ذخیره نام جدید
                 </button>
             </form>
         </div>

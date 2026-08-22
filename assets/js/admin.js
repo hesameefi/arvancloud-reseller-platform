@@ -1,6 +1,13 @@
 (function($) {
     'use strict';
 
+    // Instant theme application without flicker
+    var savedAdminTheme = localStorage.getItem('arvan_admin_theme') || 'dark';
+    if (savedAdminTheme === 'dark') {
+        $('body').addClass('arvan-admin-dark-theme');
+        $('.arvan-admin-wrap').attr('data-theme', 'dark');
+    }
+
     $(document).ready(function() {
         // Admin Dual Theme Switcher
         function applyAdminTheme(theme) {
@@ -16,10 +23,11 @@
             localStorage.setItem('arvan_admin_theme', theme);
         }
 
-        var savedAdminTheme = localStorage.getItem('arvan_admin_theme') || 'light';
-        applyAdminTheme(savedAdminTheme);
+        var activeTheme = localStorage.getItem('arvan_admin_theme') || 'dark';
+        applyAdminTheme(activeTheme);
 
-        $(document).on('click', '#arvan_admin_theme_toggle', function() {
+        $(document).on('click', '#arvan_admin_theme_toggle', function(e) {
+            e.preventDefault();
             var current = $('body').hasClass('arvan-admin-dark-theme') ? 'dark' : 'light';
             var next = (current === 'light') ? 'dark' : 'light';
             applyAdminTheme(next);

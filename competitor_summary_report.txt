@@ -1,0 +1,341 @@
+==================================================
+REPO: zhaleh197/Zarinpal
+FILES (50 files):
+  - .claude/launch.json
+  - .claude/skills/speckit-analyze/SKILL.md
+  - .claude/skills/speckit-checklist/SKILL.md
+  - .claude/skills/speckit-clarify/SKILL.md
+  - .claude/skills/speckit-constitution/SKILL.md
+  - .claude/skills/speckit-converge/SKILL.md
+  - .claude/skills/speckit-implement/SKILL.md
+  - .claude/skills/speckit-plan/SKILL.md
+  - .claude/skills/speckit-specify/SKILL.md
+  - .claude/skills/speckit-tasks/SKILL.md
+  - .claude/skills/speckit-taskstoissues/SKILL.md
+  - .env.example
+  - .gitignore
+  - .prettierignore
+  - .prettierrc.json
+
+README EXCERPT:
+# ZarinPal Merchant Analytics Dashboard
+
+A bilingual (Persian-first, English toggle) dashboard that turns a ZarinPal merchant's raw
+payment history into headline, actionable insights — each with a specific figure, a recommended
+action, and a one-click trace back to the exact underlying transactions and SQL that produced it.
+
+Built for the ZarinPal hackathon challenge. See [specs/001-merchant-analytics-dashboard](specs/001-merchant-analytics-dashboard/)
+for the full spec, plan, and architectural decisions (spec-kit workflow).
+
+## Status
+
+All five user stories are implemented — see [tasks.md](specs/001-merchant-analytics-dashboard/tasks.md)
+for the full task-by-task record:
+
+1. **Headline insights** — 5 modules (success rate, pending verification, revenue concentration,
+   failure hotspot, fee-share trend), each with a specific figure, recommended action, and trace
+2. **Category peer comparison** — success-rate and fee-share vs. an anonymized category benchmark
+3. **Time trends** — a revenue chart plus specific dated observations (busiest month, best weekday)
+4. **Repeat-customer behavior** — share of payments from returning payers, card-proxy disclosed
+5. **Ask a question** (optiona
+
+
+==================================================
+REPO: MostafaMashhadi/ZarinPalMerchantDashboard
+FILES (1 files):
+  - LICENSE
+
+README EXCERPT:
+# ZarinPal Merchant Dashboard
+
+Merchant-facing analytics platform: classical BI (ClickHouse rollups, peer ranking, drill-down), an agentic insight layer with grounded LLM narratives, and a conversational “Ask the Dashboard” agent that answers only from computed `AnalysisResult`s. Django + DRF, React, PostgreSQL, ClickHouse, Temporal, Redis, and AvalAI.
+
+## Quickstart
+
+```bash
+cp .env.example .env
+docker compose up
+```
+
+That starts Postgres, ClickHouse, Redis, and Temporal (`temporalio/auto-setup` with its own Postgres). Application services (`api`, `frontend`, `ingestion`) are Compose stanzas with the `app` profile and land in later sprints. Chat is not a Compose service — turn handling lives in `api`; memory consolidation lives in `temporal-worker`.
+
+Engineering spec: [docs/spec.md](docs/spec.md).
+
+
+
+==================================================
+REPO: parsanaderidev/zarinpal
+FILES (50 files):
+  - .gitignore
+  - DOCUMENTATION.md
+  - FINAL_PRODUCT_PLAN.md
+  - IMPLEMENTATION_STATE.md
+  - LICENSE
+  - PROJECT_PROGRESS.md
+  - README.md
+  - components.json
+  - data-guide.md
+  - dataset_profile.md
+  - hypothesis_validator.py
+  - next-env.d.ts
+  - next.config.mjs
+  - package-lock.json
+  - package.json
+
+README EXCERPT:
+# ZarinPal Dashboard | داشبورد زرین‌پال
+
+<div align="center">
+
+**سامانه هوشمند پایش و تحلیل عملکرد درگاه پرداخت زرین‌پال**
+
+Smart system for monitoring and analyzing ZarinPal payment gateway performance
+
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+
+[Demo](https://zarinpal-pi-pink.vercel.app) · [Report Bug](https://github.com/parsanaderidev/zarinpal/issues)
+
+</div>
+
+---
+
+## Overview
+
+ZarinPal Dashboard is a triage system for payment performance, built natively for the ZarinPal merchant panel. It surfaces **evidence-backed insights** per merchant with full traceability across three dimensions:
+
+| Insight | Description |
+|---|---|
+| **Peer Benchmark** | Merchant success rate vs. category peer median gap |
+| **Paid-but-Not-Verified** | Sessions stuck in "Paid" state (charged but never verified) |
+| **NoAttempt Funnel Drop** | Sessions 
+
+
+==================================================
+REPO: sina-04/ZarinPal-Challenge
+FILES (1 files):
+  - README.md
+
+README EXCERPT:
+# ZarinPal-Challenge
+hey
+
+
+
+==================================================
+REPO: NedaKhosravi/zarinpal-hackaton
+FILES (50 files):
+  - .env.example
+  - .gitignore
+  - AGENTS.md
+  - DOCUMENTATION_AND_DEMO_GUIDE.md
+  - README.md
+  - SPEC.md
+  - app/api/analytics/benchmarking/route.ts
+  - app/api/analytics/merchants/route.ts
+  - app/api/analytics/revenue-leakage/route.ts
+  - app/api/analytics/smart-routing/route.ts
+  - app/api/auth/login/route.ts
+  - app/api/auth/logout/route.ts
+  - app/api/auth/session/route.ts
+  - app/api/health/route.ts
+  - app/globals.css
+
+README EXCERPT:
+# ZarinPal Smart Merchant Copilot
+
+An explainable merchant-intelligence dashboard for the ZarinPal Analytical Challenge. It turns more than 2.2 million payment-attempt rows into session-aware revenue leakage, peer benchmarks, and routing opportunities—while exposing the exact DuckDB SQL and population behind every result.
+
+## Strategic value
+
+Merchants need decisions, not a wall of payment logs. The Copilot distinguishes checkout abandonment from payment-attempt failure, measures opportunity in IRR or Toman, finds unusual failure windows, and translates evidence into a prioritized recovery action. Sensitive `adjusted_fee` data is used only as a scaled **relative fee index**, never as ZarinPal's actual fee or rate.
+
+The app is designed around three modules:
+
+- **Revenue Leakage Engine:** session funnel, PSP-associated failure spikes, hourly leakage, and recovery playbooks.
+- **Benchmarking & Segmentation:** fair merchant percentiles, ticket-size bands, and PSP conversion comparisons.
+- **Smart Fee & Payment Routing:** relative fee performance and high-volume-window opportunities.
+
+## Hackathon scoring alignment
+
+| Criterion | Points | How this project addresses it |
+| --- | ---: | -
+
+
+==================================================
+REPO: Hoomanghkhani/ZarinPal-Merchant-Pulse
+FILES (13 files):
+  - .gitignore
+  - DEMO_SCRIPT.md
+  - Dockerfile
+  - README.md
+  - demo_narration_natural.mp3
+  - docker-compose.yml
+  - generate_voice_natural.py
+  - process_data.py
+  - processed_data.json
+  - record_demo_5min.py
+  - server.py
+  - static/index.html
+  - zarinpal_demo_5min_final.mp4
+
+README EXCERPT:
+# 🚀 راهنمای جامع اجرای پروژه نبض زرین‌پال (ZarinPal Merchant Pulse)
+### تیم «کرونوس» — هومن قرداشخانی نیاری
+**چالش شماره ۴ استارکوچ (زرین‌پال) — امتیاز ۳۰۰/۳۰۰**
+
+---
+
+## 🐳 روش اول: اجرای تک‌دستوری با Docker & Docker Compose (پیشنهادی)
+
+پروژه به گونه‌ای کانتینریزه‌شده که داوران محترم و کاربران بتوانند تنها با یک دستور کل سامانه و وب‌سرور را بالا بیاورند.
+
+### ۱. راه‌اندازی با Docker Compose:
+در پوشه اصلی پروژه دستور زیر را اجرا کنید:
+```bash
+docker-compose up -d --build
+```
+
+### ۲. مشاهده لاگ‌های در حال اجرا:
+```bash
+docker-compose logs -f
+```
+
+### ۳. متوقف‌سازی کانتینر:
+```bash
+docker-compose down
+```
+
+---
+
+## 💻 روش دوم: اجرای مستقیم با Python (بدون نیاز به پکیج‌های سنگین)
+
+پروژه با پایتون استاندارد توسعه داده شده است و هیچ وابستگی به پکیج‌های خارجی سنگین ندارد.
+
+### ۱. پردازش و بازتولید داده‌ها (اختیاری - دیتا از قبل آماده است):
+```bash
+python process_data.py
+```
+
+### ۲. اجرای وب‌سرور و داشبورد:
+```bash
+python server.py
+```
+
+---
+
+## 🌐 آدرس دسترسی به سامانه:
+پس از اجرا در هر یک از روش‌های بالا، مرورگر خود را باز کرده و به آدرس زیر مراجعه کنید:
+👉 **[http://localhost:5050](http://localhost:5050)**
+
+---
+
+## 🌟 قابلیت‌های برجسته پیاده‌سازی‌شده منطبق بر ویدئو و سند داوری:
+1. **دستیار هو
+
+
+==================================================
+REPO: NedaKhosravi/arvan-reseller-engine
+FILES (5 files):
+  - .gitignore
+  - AGENTS.md
+  - ARCHITECTURE.md
+  - SKILL.md
+  - SPEC.md
+
+README EXCERPT:
+
+
+
+==================================================
+REPO: yazdan2727/arvan-reseller
+FILES (50 files):
+  - .gitignore
+  - CHANGELOG.md
+  - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
+  - README.md
+  - SECURITY.md
+  - arvan-reseller.php
+  - assets/css/admin.css
+  - assets/css/app.css
+  - assets/js/app.js
+  - composer.json
+  - docs/api-integration.md
+  - docs/architecture.md
+  - docs/billing.md
+  - docs/cron.md
+
+README EXCERPT:
+# Arvan Reseller
+
+> **Sell ArvanCloud Cloud Servers from your own WordPress site** — prepaid wallet, real financial ledger, hourly usage billing, and a themeless responsive dashboard. Zero external dependencies.
+
+![PHP](https://img.shields.io/badge/PHP-8.1%2B-777bb4?logo=php&logoColor=white)
+![WordPress](https://img.shields.io/badge/WordPress-6.2%2B-21759b?logo=wordpress&logoColor=white)
+![License](https://img.shields.io/badge/License-GPL--2.0-blue)
+![Dependencies](https://img.shields.io/badge/dependencies-none-00baba)
+![Tests](https://img.shields.io/badge/tests-PHPUnit-45c76e)
+![Design](https://img.shields.io/badge/UI-Sorkhab%20aligned-00baba)
+
+An **independent** WordPress plugin that lets a reseller sell **ArvanCloud Cloud Server (ECC)** through their own WordPress site: prepaid wallet, immutable financial ledger, API-based provisioning (Mock + Real adapters), hourly usage billing, settlement, low-balance notifications and a fully themeless, responsive customer dashboard.
+
+> No WooCommerce. No ACF. No third-party plugin. No theme dependency. All financial data lives in dedicated custom tables — never in posts/postmeta.
+
+## Highlights
+
+- 💳 **Prepaid wallet + immutable ledger** — e
+
+
+==================================================
+REPO: hadi78m/arvan-reseller-plugin
+FILES (36 files):
+  - ACTION_TRACKER.md
+  - MEMORY.md
+  - README.md
+  - arvan-reseller-plugin.php
+  - assets/arp-frontend.css
+  - assets/css/sorkhab-design.css
+  - compile-mo.php
+  - includes/class-arp-activator.php
+  - includes/class-arp-admin.php
+  - includes/class-arp-agent-runner.php
+  - includes/class-arp-agent-shortcode.php
+  - includes/class-arp-agent-tools.php
+  - includes/class-arp-arvan-api.php
+  - includes/class-arp-cron.php
+  - includes/class-arp-gateway.php
+
+README EXCERPT:
+# Arvan Reseller Plugin
+
+**Version 1.0.0** — یک پلاگین وردپرس برای فروش مجدد (reselling) سرویس‌های ابری آروان (Arvancloud) با سیستم کیف پول، شارژ، حسابداری ساعتی، چت پشتیبانی هوشمند و پنل مدیریت کامل.
+
+- **تولیدکننده:** [hadii](https://github.com/hadi78m)
+- **صفحه افزونه:** [arvan-reseller-plugin](https://github.com/hadi78m/arvan-reseller-plugin)
+
+---
+
+## فهرست
+
+- [۱. شیوه نصب و راه‌اندازی](#۱-شیوه-نصب-و-راه‌اندازی)
+  - [نیازمندی‌ها](#نیازمندی‌ها)
+  - [نصب پلاگین](#نصب-پلاگین)
+  - [ایجاد صفحات فروشگاهی (Demo Pages)](#ایجاد-صفحات-فروشگاهی)
+  - [فعال‌سازی Access Token](#فعال‌سازی-access-token)
+  - [تنظیم API Key آروان](#تنظیم-api-key-آروان)
+  - [تنظیم حاشیه سود (Margin)](#تنظیم-حاشیه-سود)
+  - [برندینگ فروشگاه](#برندینگ-فروشگاه)
+  - [حالت Mock برای لوکال](#حالت-mock-برای-لوکال)
+  - [ایجاد کاربر آزمایشی](#ایجاد-کاربر-آزمایشی)
+  - [فعال‌سازی پشتیبانی هوشمند](#فعال‌سازی-پشتیبانی-هوشمند)
+- [۲. امکانات پلاگین](#۲-امکانات-پلاگین)
+  - [کیف پول کاربران](#کیف-پول-کاربران)
+  - [فروشگاه محصولات](#فروشگاه-محصولات)
+  - [مدیریت سرویس‌ها](#مدیریت-سرویس‌ها)
+  - [حسابداری خودکار (Cron)](#حسابداری-خودکار-cron)
+  - [پشتیبانی هوشمند (AI Agent)](#پشتیبانی-هوشمند-ai-agent)
+  - [آیکن شناور چت](#آیکن-شناور-چ
+

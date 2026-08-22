@@ -1,0 +1,60 @@
+import os
+import re
+import json
+import time
+import math
+import asyncio
+from collections import Counter, defaultdict
+from typing import List, Dict, Any, Optional
+
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse, Response
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import requests
+
+app = FastAPI(title="Liara Cloud AI Documentation Assistant", version="2.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+KNOWLEDGE_BASE_PATH = os.path.join(BASE_DIR, "knowledge_base.json")
+STATIC_DIR = os.path.join(BASE_DIR, "public")
+os.makedirs(STATIC_DIR, exist_ok=True)
+
+# ---------------------------------------------------------------------------
+# Inverted Index & BM25 Retrieval Engine
+# ---------------------------------------------------------------------------
+class BM25Retriever:
+    def __init__(self, k1: float = 1.5, b: float = 0.75):
+        self.k1 = k1
+        self.b = b
+        self.docs: List[Dict[str, Any]] = []
+        self.corpus_size = 0
+        self.avg_doc_len = 0.0
+        self.doc_lens: List[int] = []
+        self.doc_freqs: Dict[str, int] = defaultdict(int)
+        self.inverted_index: Dict[str, List[tuple]] = defaultdict(list)
+        self.platforms = set()
+
+    def tokenize(self, text: str) -> List[str]:
+        text = text.lower()
+        # Preserve technical tokens like liara.json, package.json, --app, etc.
+        tokens = re.findall(r'[a-z0-9_\-\.\:\/]+|[\u0600-\u06FF]+', text)
+        return [t for t in tokens if len(t) > 1 or re.match(r'[\u0600-\u06FF]', t)]
+
+    def load_knowledge_base(self, filepath: str):
+        if not os.path.exists(filepath):
+            print(f"Warning: {filepath} not found.")
+            return
+
+        with open(filepath, 'r', encoding='utf-8') as f:
+            raw_docs = json.load(f)

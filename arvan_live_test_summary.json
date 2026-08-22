@@ -1,0 +1,8 @@
+{
+  "status_code": 200,
+  "latency_ms": 1892.71,
+  "has_floating_widget": true,
+  "has_drawer": true,
+  "has_s3_buckets": true,
+  "has_theme": true
+}

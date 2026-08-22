@@ -406,3 +406,192 @@ body.arvan-admin-dark-theme .arvan-admin-table code {
         align-items: stretch;
     }
 }
+
+/* ==========================================================================
+   Luxury Table Badges & Cell Typography Overhaul
+   ========================================================================== */
+
+/* Resource ID Monospace Chip */
+.arvan-res-id-badge {
+    display: inline-block !important;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    background: rgba(0, 186, 186, 0.12) !important;
+    color: #00d2d2 !important;
+    border: 1px solid rgba(0, 186, 186, 0.25) !important;
+    white-space: nowrap !important;
+    direction: ltr !important;
+    text-align: center !important;
+}
+
+/* IP Address Badge */
+.arvan-ip-badge {
+    display: inline-block !important;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    color: #38bdf8 !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    white-space: nowrap !important;
+    direction: ltr !important;
+}
+
+/* Server Name Title */
+.arvan-srv-title {
+    font-size: 13.5px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+}
+
+/* User Tag */
+.arvan-user-tag {
+    display: inline-block !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: #94a3b8 !important;
+    white-space: nowrap !important;
+}
+
+/* Reseller Margin Badge */
+.arvan-margin-badge {
+    display: inline-block !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    color: #2dd4bf !important;
+    background: rgba(45, 212, 191, 0.1) !important;
+    border: 1px solid rgba(45, 212, 191, 0.2) !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
+    white-space: nowrap !important;
+}
+
+/* Price Highlight */
+.arvan-price-highlight {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    color: #00d2d2 !important;
+    white-space: nowrap !important;
+}
+
+/* Ultra-Clean Status Pill Badges */
+.arvan-status-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    padding: 5px 14px !important;
+    border-radius: 9999px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+.arvan-status-active {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(52, 211, 153, 0.35) !important;
+}
+
+.arvan-status-suspended {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.35) !important;
+}
+
+/* Glowing Pulsing Status Dots */
+.arvan-pulse-dot {
+    display: inline-block !important;
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+}
+
+.arvan-dot-green {
+    background-color: #10b981 !important;
+    box-shadow: 0 0 8px #10b981 !important;
+}
+
+.arvan-dot-amber {
+    background-color: #f59e0b !important;
+    box-shadow: 0 0 8px #f59e0b !important;
+}
+
+/* Force Table Cell Vertical Align & Contrast */
+.arvan-admin-table th, .arvan-admin-table td {
+    vertical-align: middle !important;
+    padding: 14px 16px !important;
+}
+
+
+/* Responsive Table Scroll Container */
+.arvan-table-responsive-wrapper {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    margin-top: 10px !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #00baba rgba(255, 255, 255, 0.05) !important;
+}
+
+.arvan-table-responsive-wrapper::-webkit-scrollbar {
+    height: 7px !important;
+}
+.arvan-table-responsive-wrapper::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-radius: 4px !important;
+}
+.arvan-table-responsive-wrapper::-webkit-scrollbar-thumb {
+    background: #00baba !important;
+    border-radius: 4px !important;
+}
+
+.arvan-admin-table {
+    min-width: 1340px !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+/* Action Buttons Container & Compact Sizing */
+.arvan-action-buttons-wrap {
+    display: inline-flex !important;
+    gap: 6px !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.arvan-action-buttons-wrap .arvan-btn-admin {
+    padding: 5px 12px !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    border-radius: 7px !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+/* User Tag Styles */
+.arvan-user-tag {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    padding: 3px 9px !important;
+    border-radius: 6px !important;
+    border: 1px solid transparent !important;
+    white-space: nowrap !important;
+}

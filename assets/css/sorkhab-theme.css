@@ -1272,3 +1272,315 @@ footer.wp-block-template-part,
         align-items: stretch;
     }
 }
+
+/* ==========================================================================
+   Floating Global AI Cloud Architect Widget (Feature C)
+   ========================================================================== */
+.ar-floating-ai-container {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 999999;
+    font-family: 'Yekan Bakh FaNum', var(--ar-font-main), sans-serif;
+    direction: rtl;
+}
+
+.ar-floating-ai-fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e11d48, #9333ea);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(225, 29, 72, 0.4), 0 0 20px rgba(147, 51, 234, 0.3);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+}
+
+.ar-floating-ai-fab:hover {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 15px 35px rgba(225, 29, 72, 0.6), 0 0 30px rgba(147, 51, 234, 0.5);
+}
+
+.ar-fab-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.ar-fab-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #10b981;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1.5px solid #0f172a;
+}
+
+.ar-fab-pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid #e11d48;
+    animation: arPulse 2s infinite;
+    opacity: 0.6;
+}
+
+@keyframes arPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+.ar-floating-ai-drawer {
+    position: absolute;
+    bottom: 75px;
+    left: 0;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 520px;
+    max-height: calc(100vh - 120px);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(225, 29, 72, 0.15);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: bottom left;
+    animation: arDrawerIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.ar-floating-ai-drawer.active {
+    display: flex;
+}
+
+@keyframes arDrawerIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ar-drawer-header {
+    background: linear-gradient(135deg, rgba(225, 29, 72, 0.2), rgba(147, 51, 234, 0.2));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ar-drawer-close-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+}
+.ar-drawer-close-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ar-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ar-drawer-quick-chips {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.ar-drawer-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #38bdf8;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+.ar-drawer-chip:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+}
+
+.ar-drawer-footer {
+    padding: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.98);
+}
+
+.ar-drawer-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 13px;
+    outline: none;
+    direction: rtl;
+}
+.ar-drawer-input:focus {
+    border-color: #e11d48;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.ar-drawer-send-btn {
+    background: #e11d48;
+    border: none;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+.ar-drawer-send-btn:hover {
+    background: #be123c;
+    transform: scale(1.05);
+}
+
+
+/* ==========================================================================
+   Bulletproof Floating AI FAB & Drawer Rules
+   ========================================================================== */
+.ar-floating-ai-container {
+    position: fixed !important;
+    bottom: 24px !important;
+    left: 24px !important;
+    z-index: 999999 !important;
+    direction: rtl !important;
+    display: block !important;
+}
+
+.ar-floating-ai-drawer {
+    display: none;
+    position: absolute !important;
+    bottom: 75px !important;
+    left: 0 !important;
+    width: 380px !important;
+    max-width: calc(100vw - 32px) !important;
+    height: 520px !important;
+    max-height: calc(100vh - 120px) !important;
+    background: rgba(15, 23, 42, 0.96) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 186, 186, 0.2) !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.ar-floating-ai-drawer.active {
+    display: flex !important;
+}
+
+/* ==========================================================================
+   Modern Bento Card Layout Overhaul (Zero Overflow / Zero Text Clipping)
+   ========================================================================== */
+.ar-bento-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin-bottom: 25px !important;
+}
+
+@media (max-width: 1200px) {
+    .ar-bento-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .ar-bento-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.ar-bento-card {
+    background: var(--ar-bg-card) !important;
+    border: 1px solid var(--ar-border-card) !important;
+    border-radius: 16px !important;
+    padding: 18px 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    box-shadow: var(--ar-shadow-card) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    overflow: visible !important;
+    min-height: 125px !important;
+}
+
+.ar-bento-card-top {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 2px !important;
+}
+
+.ar-bento-title {
+    font-size: 13px !important;
+    color: var(--ar-text-secondary) !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    flex: 1 !important;
+}
+
+.ar-bento-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+    border: 1px solid var(--ar-border-subtle) !important;
+}
+
+.ar-bento-value {
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+}
+
+.ar-bento-sub {
+    font-size: 11.5px !important;
+    color: var(--ar-text-muted) !important;
+    white-space: normal !important;
+    line-height: 1.3 !important;
+    overflow: visible !important;
+    margin-top: 2px !important;
+}

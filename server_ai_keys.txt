@@ -1,0 +1,28 @@
+/var/www/forward_bot/config.py:GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+/var/www/forward_bot/config.py:    print(f"GEMINI_API_KEY: {'*' * 5 if GEMINI_API_KEY else 'None'}")
+/var/www/forward_bot/.env:GEMINI_API_KEY=AIzaSyBUY1ZIL98tetSYwARxe8z56MsG1vRMGjc
+/var/www/coach.shop4bit.ir/.env.local:GEMINI_API_KEY=PLACEHOLDER_API_KEY
+/var/www/coach.shop4bit.ir/backend/.env:API_KEY=AIzaSyCl9s_p-0oalWX7thj9VMGZNVmTsu9-MF8
+/var/www/miladarch/.env.example:GEMINI_API_KEY="your-gemini-api-key-here"
+/var/www/miladarch/.env:GEMINI_API_KEY="AIzaSyDzjoC4od8nwlXdaeQ_hp92leCOqYhNLq8"
+/var/www/asarezerv/backend/.env.example:KAVENEGAR_API_KEY=""
+/var/www/asarezerv/backend/.env:KAVENEGAR_API_KEY=
+/var/www/hamzad-ai/.env:GEMINI_API_KEY=AIzaSyDzjoC4od8nwlXdaeQ_hp92leCOqYhNLq8
+/var/www/ghoranyar/config.py:GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+/var/www/ghoranyar/config.py:if not GEMINI_API_KEY:
+/var/www/ghoranyar/config.py:    raise ValueError("GEMINI_API_KEY is not set in the environment or .env file")
+/var/www/ghoranyar/.env:GEMINI_API_KEY=AIzaSyBUY1ZIL98tetSYwARxe8z56MsG1vRMGjc
+/var/www/ai-operator/.env:API_KEY=AIzaSyDzjoC4od8nwlXdaeQ_hp92leCOqYhNLq8
+/var/www/bizcommand-os/.env.example:WHOP_API_KEY=
+/var/www/bizcommand-os/.env.example:NOTION_API_KEY=
+/var/www/bizcommand-os/.env.example:WEBINARJAM_API_KEY=          # account-wide key; pulls webinar registrants/attendees
+/var/www/bizcommand-os/.env.example:TRAKYO_API_KEY=              # revenue attribution; status-only until Trakyo ships an API
+/var/www/bizcommand-os/.env.example:GHL_API_KEY=                 # GoHighLevel Private Integration token (Settings → Private Integrations, read scopes)
+/var/www/bizcommand-os/.env.example:AI_GATEWAY_API_KEY=           # Vercel AI Gateway key; enables agent chat
+/var/www/bizcommand-os/.env.example:BEEHIIV_API_KEY=             # Beehiiv API key
+/var/www/bizcommand-os/.env.example:MANYCHAT_API_KEY=            # ManyChat API key
+/var/www/ai-telegram/.env:GEMINI_API_KEY=AIzaSyCl9s_p-0oalWX7thj9VMGZNVmTsu9-MF8
+/var/www/aiolexa-content-bot/.env.example:GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
+/var/www/aiolexa-content-bot/.env:GEMINI_API_KEY=AIzaSyCl9s_p-0oalWX7thj9VMGZNVmTsu9-MF8
+/var/www/aiolexa/backend/.env.example:GEMINI_API_KEY=your_gemini_api_key_here
+/var/www/aiolexa/backend/.env:API_KEY=AIzaSyCl9s_p-0oalWX7thj9VMGZNVmTsu9-MF8

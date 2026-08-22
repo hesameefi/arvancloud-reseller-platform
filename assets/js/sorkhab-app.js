@@ -245,6 +245,14 @@
         function appendBotMessage(data) {
             var replyHtml = formatMarkdownText(data.reply);
             var cardHtml = '';
+            var tierHtml = '';
+
+            if (data.tier) {
+                tierHtml = '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:2px 8px;border-radius:12px;font-size:11px;margin-bottom:6px;font-weight:700;">' +
+                    '<span>🏷️ ' + data.tier + '</span>' +
+                    '<span style="color:#10b981;">💰 +' + (data.cost_saved_toman || 150) + ' تومان صرفه‌جویی توکن</span>' +
+                '</div>';
+            }
 
             if (data.type === 'recommendation' && data.action_card) {
                 var card = data.action_card;
@@ -270,6 +278,28 @@
                         '</button>' +
                     '</div>' +
                 '</div>';
+            } else if (data.type === 'diagnostic_report' && data.action_card && data.action_card.can_heal) {
+                var ac = data.action_card;
+                var diff = ac.before_after_diff || {};
+                cardHtml = '<div style="background:rgba(15,23,42,0.85);border:1px solid rgba(244,63,94,0.4);border-radius:12px;padding:12px;margin-top:10px;">' +
+                    '<div style="font-weight:800;color:#fb7185;font-size:13px;margin-bottom:8px;">🛠️ ' + ac.heal_title + '</div>' +
+                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11.5px;margin-bottom:10px;">' +
+                        '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:8px;border-radius:8px;">' +
+                            '<strong style="color:#ef4444;">🔴 وضعیت قبل (خطا):</strong><br>' +
+                            'پورت: ' + (diff.before ? diff.before.port : '80') + '<br>' +
+                            'وضعیت: ' + (diff.before ? diff.before.status : '502 Bad Gateway') +
+                        '</div>' +
+                        '<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:8px;border-radius:8px;">' +
+                            '<strong style="color:#10b981;">🟢 اصلاح بعد (تعمیر):</strong><br>' +
+                            'پورت: ' + (diff.after ? diff.after.port : '3000') + '<br>' +
+                            'وضعیت: ' + (diff.after ? diff.after.status : '200 OK') +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">🔐 امضای امنیتی دیجیتال: <code>' + (ac.signature ? ac.signature.substring(0, 16) : 'HMAC-SHA256') + '...</code> (اعتبار ۵ دقیقه)</div>' +
+                    '<button type="button" class="ar-btn ar-btn-primary ar-signed-heal-btn" style="width:100%;padding:9px;font-size:12.5px;font-weight:800;" data-payload="' + ac.signed_token + '" data-sig="' + ac.signature + '">' +
+                        '⚡ تایید و اجرای فوری اصلاحیه امن' +
+                    '</button>' +
+                '</div>';
             } else if (data.type === 'insufficient_balance') {
                 cardHtml = '<div style="margin-top: 10px;">' +
                     '<button type="button" class="ar-btn ar-btn-primary" onclick="document.getElementById(\'ar_open_deposit_modal\').click();" style="padding: 9px 18px; font-size: 13px;">' +
@@ -284,11 +314,23 @@
                 '</div>';
             }
 
+            var sourcesHtml = '';
+            if (data.sources && data.sources.length) {
+                sourcesHtml = '<div style="margin-top:8px;padding-top:6px;border-top:1px dashed rgba(255,255,255,0.1);display:flex;flex-wrap:wrap;gap:6px;">' +
+                    '<span style="font-size:11px;color:var(--ar-text-muted);">📚 منابع رسمی:</span>';
+                data.sources.forEach(function(s) {
+                    sourcesHtml += '<a href="' + s.url + '" target="_blank" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:2px 8px;border-radius:10px;font-size:11px;color:#38bdf8;text-decoration:none;">' + s.title + ' ↗</a>';
+                });
+                sourcesHtml += '</div>';
+            }
+
             var html = '<div class="ar-ai-msg ar-ai-msg-bot">' +
                 '<div class="ar-ai-msg-avatar">🤖</div>' +
                 '<div class="ar-ai-msg-body">' +
+                    tierHtml +
                     '<div class="ar-ai-msg-content">' + replyHtml + '</div>' +
                     cardHtml +
+                    sourcesHtml +
                 '</div>' +
             '</div>';
 
@@ -401,7 +443,285 @@
                 '</div>'
             );
         });
+
+        // ======================================================================
+        // Floating Global AI Cloud Architect Widget Handlers (Feature C)
+        // ======================================================================
+        $(document).on('click', '#ar_floating_ai_btn', function() {
+            $('#ar_floating_ai_drawer').toggleClass('active');
+            if ($('#ar_floating_ai_drawer').hasClass('active')) {
+                $('#ar_drawer_input').focus();
+            }
+        });
+
+        $(document).on('click', '#ar_drawer_close', function() {
+            $('#ar_floating_ai_drawer').removeClass('active');
+        });
+
+        $(document).on('click', '.ar-drawer-chip', function() {
+            var p = $(this).data('prompt');
+            $('#ar_drawer_input').val(p);
+            $('#ar_drawer_form').trigger('submit');
+        });
+
+        $('#ar_drawer_form').on('submit', function(e) {
+            e.preventDefault();
+            var $inp = $('#ar_drawer_input');
+            var msg = $.trim($inp.val());
+            if (!msg) return;
+
+            var $box = $('#ar_drawer_chat_messages');
+            $box.append('<div class="ar-ai-msg user" style="display:flex;justify-content:flex-start;margin-bottom:8px;"><div class="ar-ai-bubble" style="background:#e11d48;color:#fff;padding:8px 12px;border-radius:12px;max-width:80%;font-size:12.5px;">' + escapeHtml(msg) + '</div></div>');
+            $inp.val('');
+            $box.scrollTop($box[0].scrollHeight);
+
+            var $sendBtn = $('#ar_drawer_send_btn');
+            $sendBtn.prop('disabled', true).text('⏳');
+
+            $.post(ArvanApp.ajax_url, {
+                action: 'arvan_ai_chat_message',
+                nonce: ArvanApp.nonce,
+                message: msg
+            }, function(res) {
+                $sendBtn.prop('disabled', false).text('➤');
+                var reply = (res.success && res.data) ? res.data.reply : 'خطا در پردازش هوش مصنوعی.';
+                var replyHtml = reply.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                var tierHtml = '';
+                if (res.data && res.data.tier) {
+                    tierHtml = '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:2px 8px;border-radius:12px;font-size:10.5px;margin-bottom:6px;font-weight:700;">' +
+                        '<span>🏷️ ' + res.data.tier + '</span>' +
+                        '<span style="color:#10b981;">💰 +' + (res.data.cost_saved_toman || 150) + ' تومان صرفه‌جویی</span>' +
+                    '</div><br>';
+                }
+
+                var cardHtml = '';
+                if (res.data && res.data.action_card && res.data.action_card.can_deploy) {
+                    var ac = res.data.action_card;
+                    cardHtml = '<div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;margin-top:8px;">' +
+                        '<div style="font-weight:800;color:#38bdf8;font-size:12px;">🚀 ' + ac.flavor_name + '</div>' +
+                        '<div style="font-size:11px;color:#aaa;margin:4px 0;">' + ac.cpu + ' vCPU | ' + ac.ram + 'MB RAM | ' + ac.disk + 'GB NVMe</div>' +
+                        '<div style="font-size:12px;color:#10b981;font-weight:700;margin-bottom:6px;">' + ac.hourly_price_formatted + ' تومان/ساعت</div>' +
+                        '<button type="button" class="ar-ai-deploy-btn ar-btn ar-btn-primary" style="padding:6px 12px;font-size:11px;width:100%;" data-flavor="' + ac.flavor_id + '" data-region="' + ac.region_id + '" data-image="' + ac.image_id + '" data-hostname="' + ac.hostname + '">⚡ راه‌اندازی فوری</button>' +
+                    '</div>';
+                } else if (res.data && res.data.action_card && res.data.action_card.can_heal) {
+                    var ac = res.data.action_card;
+                    var diff = ac.before_after_diff || {};
+                    cardHtml = '<div style="background:rgba(15,23,42,0.85);border:1px solid rgba(244,63,94,0.4);border-radius:10px;padding:10px;margin-top:8px;">' +
+                        '<div style="font-weight:800;color:#fb7185;font-size:12px;margin-bottom:6px;">🛠️ ' + ac.heal_title + '</div>' +
+                        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10.5px;margin-bottom:8px;">' +
+                            '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:6px;border-radius:6px;">' +
+                                '<strong style="color:#ef4444;">🔴 قبل:</strong> پورت ' + (diff.before ? diff.before.port : '80') + ' (خطای ۵۰۲)' +
+                            '</div>' +
+                            '<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:6px;border-radius:6px;">' +
+                                '<strong style="color:#10b981;">🟢 بعد:</strong> پورت ' + (diff.after ? diff.after.port : '3000') + ' (۲۰۰ OK)' +
+                            '</div>' +
+                        '</div>' +
+                        '<button type="button" class="ar-btn ar-btn-primary ar-signed-heal-btn" style="width:100%;padding:7px;font-size:11.5px;font-weight:800;" data-payload="' + ac.signed_token + '" data-sig="' + ac.signature + '">' +
+                            '⚡ تایید و اجرای فوری اصلاحیه امن' +
+                        '</button>' +
+                    '</div>';
+                }
+
+                var sourcesHtml = '';
+                if (res.data && res.data.sources && res.data.sources.length) {
+                    sourcesHtml = '<div style="margin-top:8px;padding-top:6px;border-top:1px dashed rgba(255,255,255,0.1);display:flex;flex-wrap:wrap;gap:4px;">' +
+                        '<span style="font-size:10.5px;color:var(--ar-text-muted);">📚 منابع:</span>';
+                    res.data.sources.forEach(function(s) {
+                        sourcesHtml += '<a href="' + s.url + '" target="_blank" style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:8px;font-size:10px;color:#38bdf8;text-decoration:none;">' + s.title + '</a>';
+                    });
+                    sourcesHtml += '</div>';
+                }
+
+                $box.append('<div class="ar-ai-msg bot" style="display:flex;justify-content:flex-end;margin-bottom:8px;"><div class="ar-ai-bubble" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 12px;border-radius:12px;max-width:85%;font-size:12px;line-height:1.5;">' + tierHtml + replyHtml + cardHtml + sourcesHtml + '</div></div>');
+                $box.scrollTop($box[0].scrollHeight);
+            }).fail(function() {
+                $sendBtn.prop('disabled', false).text('➤');
+                $box.append('<div class="ar-ai-msg bot" style="color:#ef4444;font-size:12px;">خطا در اتصال به هوش مصنوعی.</div>');
+            });
+        });
+
+        // 1-Click Signed Action Execution Handler (Innovation 2)
+        $(document).on('click', '.ar-signed-heal-btn', function() {
+            var $btn = $(this);
+            var payload = $btn.data('payload');
+            var sig = $btn.data('sig');
+
+            $btn.prop('disabled', true).text('⏳ در حال اجرای امن اصلاحیه کانتینر...');
+
+            $.post(ArvanApp.ajax_url, {
+                action: 'arvan_execute_signed_action',
+                nonce: ArvanApp.nonce,
+                payload: payload,
+                signature: sig
+            }, function(res) {
+                if (res.success) {
+                    showToast(res.data.message || 'اکشن امن با موفقیت اعمال گردید.', 'success');
+                    $btn.removeClass('ar-btn-primary').addClass('ar-btn-success').text('✅ با موفقیت ترمیم و لایو شد');
+                } else {
+                    showToast(res.data || 'خطا در اعتبارسنجی امضای اکشن.', 'error');
+                    $btn.prop('disabled', false).text('تلاش مجدد');
+                }
+            }).fail(function() {
+                showToast('خطا در ارتباط با سرور امنیتی.', 'error');
+                $btn.prop('disabled', false).text('تلاش مجدد');
+            });
+        });
+
+        // ======================================================================
+        // S3 Object Storage Bucket Handlers (Feature D)
+        // ======================================================================
+        $(document).on('click', '#ar_btn_create_bucket_submit', function() {
+            var name = $.trim($('#ar_s3_bucket_input').val());
+            if (!name) {
+                showToast('لطفاً نام باکت را وارد کنید.', 'error');
+                return;
+            }
+            var $btn = $(this);
+            $btn.prop('disabled', true).text('در حال ایجاد باکت...');
+
+            $.post(ArvanApp.ajax_url, {
+                action: 'arvan_customer_create_bucket',
+                nonce: ArvanApp.nonce,
+                bucket_name: name,
+                region: 'ir-thr-at1',
+                acl: 'private'
+            }, function(res) {
+                $btn.prop('disabled', false).text('ایجاد باکت');
+                if (res.success) {
+                    showToast(res.data.message || 'باکت ابری با موفقیت ایجاد شد.', 'success');
+                    $('#ar_s3_bucket_input').val('');
+                    loadS3BucketsList();
+                } else {
+                    showToast(res.data || 'خطا در ایجاد باکت.', 'error');
+                }
+            }).fail(function() {
+                $btn.prop('disabled', false).text('ایجاد باکت');
+                showToast('خطا در ارتباط با سرور ذخیره‌سازی ابری.', 'error');
+            });
+        });
+
+        function loadS3BucketsList() {
+            var $list = $('#ar_s3_buckets_list');
+            if (!$list.length) return;
+
+            $.post(ArvanApp.ajax_url, {
+                action: 'arvan_customer_list_buckets',
+                nonce: ArvanApp.nonce
+            }, function(res) {
+                if (res.success && res.data && res.data.buckets) {
+                    $list.empty();
+                    if (res.data.buckets.length === 0) {
+                        $list.html('<div style="font-size:12px;color:var(--ar-text-muted);padding:8px 0;">هیچ باکت فعالی وجود ندارد.</div>');
+                        return;
+                    }
+                    res.data.buckets.forEach(function(b) {
+                        $list.append(
+                            '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding:8px 0;border-bottom:1px dashed var(--ar-border-subtle);">' +
+                                '<span dir="ltr">🗂️ <strong>' + escapeHtml(b.bucket_name) + '</strong> (' + b.region + ')</span>' +
+                                '<span style="color:var(--ar-status-success);font-weight:700;">● فعال (S3 Endpoint)</span>' +
+                            '</div>'
+                        );
+                    });
+                }
+            });
+        }
+
+        // Auto-load S3 buckets on tab click
+        $(document).on('click', '[data-tab="tab_cdn_storage"]', function() {
+            loadS3BucketsList();
+        });
     });
 
-})(jQuery);
+    function escapeHtml(text) {
+        return $('<div>').text(text).html();
+    }
+
+
+        // ======================================================================
+        // Server Upgrade & Hardware Resize Modal Handlers
+        // ======================================================================
+        $(document).on('click', '.ar-upgrade-srv-btn', function() {
+            var srvId = $(this).data('id');
+            var srvName = $(this).data('name');
+            var srvFlavor = $(this).data('flavor');
+
+            $('#ar_upgrade_server_id').val(srvId);
+            $('#ar_upgrade_server_name_display').text(srvName + ' (' + srvId + ')');
+            if (srvFlavor) {
+                $('#ar_upgrade_flavor_select').val(srvFlavor);
+            }
+            $('#ar_upgrade_srv_modal').addClass('active');
+        });
+
+        $('#ar_upgrade_srv_form').on('submit', function(e) {
+            e.preventDefault();
+            var $btn = $('#ar_btn_submit_upgrade');
+            var srvId = $('#ar_upgrade_server_id').val();
+            var flavorId = $('#ar_upgrade_flavor_select').val();
+
+            $btn.prop('disabled', true).text('⏳ در حال ارسال دستور تغییر اندازه به هایپروایزر...');
+
+            $.post(ArvanApp.ajax_url, {
+                action: 'arvan_customer_upgrade_server',
+                nonce: ArvanApp.nonce,
+                server_id: srvId,
+                flavor_id: flavorId
+            }, function(res) {
+                $btn.prop('disabled', false).text('🚀 تایید و ارتقای آنی سرور');
+                if (res.success) {
+                    $('#ar_upgrade_srv_modal').removeClass('active');
+                    showToast(res.data.message, 'success');
+                    setTimeout(function() { location.reload(); }, 1200);
+                } else {
+                    showToast(res.data || 'خطا در ارتقای سرور.', 'error');
+                }
+            }).fail(function() {
+                $btn.prop('disabled', false).text('🚀 تایید و ارتقای آنی سرور');
+                showToast('خطا در ارتباط با هایپروایزر.', 'error');
+            });
+        });
+
+        // ======================================================================
+        // Server Rename & Edit Modal Handlers
+        // ======================================================================
+        $(document).on('click', '.ar-edit-srv-btn', function() {
+            var srvId = $(this).data('id');
+            var srvName = $(this).data('name');
+
+            $('#ar_rename_server_id').val(srvId);
+            $('#ar_rename_server_input').val(srvName);
+            $('#ar_rename_srv_modal').addClass('active');
+        });
+
+        $('#ar_rename_srv_form').on('submit', function(e) {
+            e.preventDefault();
+            var $btn = $('#ar_btn_submit_rename');
+            var srvId = $('#ar_rename_server_id').val();
+            var newName = $('#ar_rename_server_input').val().trim();
+
+            $btn.prop('disabled', true).text('در حال ذخیره...');
+
+            $.post(ArvanApp.ajax_url, {
+                action: 'arvan_customer_edit_server',
+                nonce: ArvanApp.nonce,
+                server_id: srvId,
+                name: newName
+            }, function(res) {
+                $btn.prop('disabled', false).text('💾 ذخیره نام جدید');
+                if (res.success) {
+                    $('#ar_rename_srv_modal').removeClass('active');
+                    showToast(res.data.message, 'success');
+                    setTimeout(function() { location.reload(); }, 1000);
+                } else {
+                    showToast(res.data || 'خطا در تغییر نام سرور.', 'error');
+                }
+            }).fail(function() {
+                $btn.prop('disabled', false).text('💾 ذخیره نام جدید');
+                showToast('خطا در ارتباط با سرور.', 'error');
+            });
+        });
+
+    })(jQuery);
+
 

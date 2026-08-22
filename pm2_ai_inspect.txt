@@ -1,0 +1,132 @@
+ Describing process with id 35 - name liara-assistant 
+┌───────────────────┬───────────────────────────────────────────┐
+│ status            │ online                                    │
+│ name              │ liara-assistant                           │
+│ namespace         │ default                                   │
+│ version           │ N/A                                       │
+│ restarts          │ 119                                       │
+│ uptime            │ 2h                                        │
+│ script path       │ /var/www/liara-assistant/server.py        │
+│ script args       │ N/A                                       │
+│ error log path    │ /root/.pm2/logs/liara-assistant-error.log │
+│ out log path      │ /root/.pm2/logs/liara-assistant-out.log   │
+│ pid path          │ /root/.pm2/pids/liara-assistant-35.pid    │
+│ interpreter       │ python3                                   │
+│ interpreter args  │ N/A                                       │
+│ script id         │ 35                                        │
+│ exec cwd          │ /var/www/liara-assistant                  │
+│ exec mode         │ fork_mode                                 │
+│ node.js version   │ N/A                                       │
+│ node env          │ N/A                                       │
+│ watch & reload    │ ✘                                         │
+│ unstable restarts │ 0                                         │
+│ created at        │ 2026-08-21T17:54:20.178Z                  │
+└───────────────────┴───────────────────────────────────────────┘
+ Divergent env variables from local env 
+┌────────────────┬─────────────────────────────────────────┐
+│ PWD            │ /var/www/liara-assistant                │
+│ SSH_CONNECTION │ 204.168.231.59 14662 62.238.29.248 3232 │
+│ XDG_SESSION_ID │ 14353                                   │
+│ SSH_CLIENT     │ 204.168.231.59 14662 3232               │
+└────────────────┴─────────────────────────────────────────┘
+
+ Add your own code metrics: http://bit.ly/code-metrics
+ Use `pm2 logs liara-assistant [--lines 1000]` to display logs
+ Use `pm2 env 35` to display environment variables
+ Use `pm2 monit` to monitor CPU and Memory usage liara-assistant
+---
+ Describing process with id 12 - name aiolexa-content-bot 
+┌───────────────────┬──────────────────────────────────────────────┐
+│ status            │ online                                       │
+│ name              │ aiolexa-content-bot                          │
+│ namespace         │ default                                      │
+│ version           │ 1.0.0                                        │
+│ restarts          │ 2                                            │
+│ uptime            │ 10D                                          │
+│ script path       │ /var/www/aiolexa-content-bot/src/bot.js      │
+│ script args       │ N/A                                          │
+│ error log path    │ /var/www/aiolexa-content-bot/logs/error.log  │
+│ out log path      │ /var/www/aiolexa-content-bot/logs/output.log │
+│ pid path          │ /root/.pm2/pids/aiolexa-content-bot-12.pid   │
+│ interpreter       │ node                                         │
+│ interpreter args  │ N/A                                          │
+│ script id         │ 12                                           │
+│ exec cwd          │ /var/www/aiolexa-content-bot                 │
+│ exec mode         │ fork_mode                                    │
+│ node.js version   │ 20.20.2                                      │
+│ node env          │ production                                   │
+│ watch & reload    │ ✘                                            │
+│ unstable restarts │ 0                                            │
+│ created at        │ 2026-08-11T06:07:31.615Z                     │
+└───────────────────┴──────────────────────────────────────────────┘
+ Actions available 
+┌────────────────────────┐
+│ km:heapdump            │
+│ km:cpu:profiling:start │
+│ km:cpu:profiling:stop  │
+│ km:heap:sampling:start │
+│ km:heap:sampling:stop  │
+└────────────────────────┘
+ Trigger via: pm2 trigger aiolexa-content-bot <action_name>
+
+ Code metrics value 
+┌────────────────────────┬───────────┐
+│ Heap Size              │ 29.12 MiB │
+│ Heap Usage             │ 91.03 %   │
+│ Used Heap Size         │ 26.51 MiB │
+│ Active requests        │ 0         │
+│ Active handles         │ 5         │
+│ Event Loop Latency     │ 0.56 ms   │
+│ Event Loop Latency p95 │ 1.29 ms   │
+└────────────────────────┴───────────┘
+ Divergent env variables from local env 
+┌────────────────┬──────────────────────────────────────────┐
+│ PWD            │ /var/www/aiolexa-content-bot             │
+│ SSH_CONNECTION │ 159.195.138.168 49050 62.238.29.248 3232 │
+│ SHLVL          │ 0                                        │
+│ XDG_SESSION_ID │ 5512                                     │
+│ SSH_CLIENT     │ 159.195.138.168 49050 3232               │
+└────────────────┴──────────────────────────────────────────┘
+
+ Add your own code metrics: http://bit.ly/code-metrics
+ Use `pm2 logs aiolexa-content-bot [--lines 1000]` to display logs
+ Use `pm2 env 12` to display environment variables
+ Use `pm2 monit` to monitor CPU and Memory usage aiolexa-content-bot
+---
+ Describing process with id 7 - name ai-telegram-bot 
+┌───────────────────┬───────────────────────────────────────────┐
+│ status            │ online                                    │
+│ name              │ ai-telegram-bot                           │
+│ namespace         │ default                                   │
+│ version           │ N/A                                       │
+│ restarts          │ 248160                                    │
+│ uptime            │ 0s                                        │
+│ script path       │ /var/www/ai-telegram/bot.py               │
+│ script args       │ N/A                                       │
+│ error log path    │ /root/.pm2/logs/ai-telegram-bot-error.log │
+│ out log path      │ /root/.pm2/logs/ai-telegram-bot-out.log   │
+│ pid path          │ /root/.pm2/pids/ai-telegram-bot-7.pid     │
+│ interpreter       │ python3                                   │
+│ interpreter args  │ N/A                                       │
+│ script id         │ 7                                         │
+│ exec cwd          │ /var/www/ai-telegram                      │
+│ exec mode         │ fork_mode                                 │
+│ node.js version   │ N/A                                       │
+│ node env          │ N/A                                       │
+│ watch & reload    │ ✘                                         │
+│ unstable restarts │ 0                                         │
+│ created at        │ 2026-08-11T09:47:18.780Z                  │
+└───────────────────┴───────────────────────────────────────────┘
+ Divergent env variables from local env 
+┌────────────────┬──────────────────────────────────────────┐
+│ PWD            │ /var/www/ai-telegram                     │
+│ SSH_CONNECTION │ 159.195.138.168 53162 62.238.29.248 3232 │
+│ SHLVL          │ 1                                        │
+│ XDG_SESSION_ID │ 5282                                     │
+│ SSH_CLIENT     │ 159.195.138.168 53162 3232               │
+└────────────────┴──────────────────────────────────────────┘
+
+ Add your own code metrics: http://bit.ly/code-metrics
+ Use `pm2 logs ai-telegram-bot [--lines 1000]` to display logs
+ Use `pm2 env 7` to display environment variables
+ Use `pm2 monit` to monitor CPU and Memory usage ai-telegram-bot
