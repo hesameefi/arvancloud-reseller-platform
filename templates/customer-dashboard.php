@@ -210,13 +210,18 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                                             <h3><?php echo esc_html($srv['name']); ?></h3>
                                             <div class="ar-server-region"><?php echo $flag . ' ' . esc_html($loc_title); ?> (<code><?php echo esc_html($srv['region']); ?></code>)</div>
                                         </div>
-                                        <span class="ar-status-badge <?php echo $is_active ? 'active' : 'suspended'; ?>">
-                                            <?php if ($is_active): ?>
-                                                <span class="ar-pulse-dot" style="width: 6px; height: 6px;"></span> روشن و فعال
-                                            <?php else: ?>
-                                                ⏹ خاموش (Suspend)
-                                            <?php endif; ?>
-                                        </span>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span class="ar-status-badge <?php echo $is_active ? 'active' : 'suspended'; ?>">
+                                                <?php if ($is_active): ?>
+                                                    <span class="ar-pulse-dot" style="width: 6px; height: 6px;"></span> روشن و فعال
+                                                <?php else: ?>
+                                                    ⏹ خاموش (Suspend)
+                                                <?php endif; ?>
+                                            </span>
+                                            <button type="button" class="ar-server-del-icon-btn ar-action-btn" data-action="terminate" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" title="حذف دائمی سرور">
+                                                🗑️
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div class="ar-server-meta-grid">
@@ -241,16 +246,16 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
 
                                 <div class="ar-server-actions">
                                     <?php if ($is_active): ?>
-                                        <button type="button" class="ar-btn ar-btn-danger ar-action-btn" data-action="power_off" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">
+                                        <button type="button" class="ar-btn ar-btn-danger ar-action-btn" data-action="power_off" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" title="خاموش کردن سرور">
                                             ⏹ خاموش
                                         </button>
                                     <?php else: ?>
-                                        <button type="button" class="ar-btn ar-btn-primary ar-action-btn" data-action="power_on" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>">
+                                        <button type="button" class="ar-btn ar-btn-primary ar-action-btn" data-action="power_on" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" title="روشن کردن سرور">
                                             ▶ روشن
                                         </button>
                                     <?php endif; ?>
 
-                                    <button type="button" class="ar-btn ar-btn-secondary ar-upgrade-srv-btn" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" data-flavor="<?php echo esc_attr($srv['flavor_id']); ?>" data-price="<?php echo esc_attr($srv['hourly_customer_price']); ?>" title="تغییر اندازه و ارتقای پلن سخت‌افزاری">
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-upgrade-srv-btn" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" data-flavor="<?php echo esc_attr($srv['flavor_id']); ?>" data-price="<?php echo esc_attr($srv['hourly_customer_price']); ?>" title="تغییر اندازه و ارتقای سخت‌افزاری">
                                         ⚡ ارتقا
                                     </button>
 
@@ -258,12 +263,8 @@ $telemetry = Arvan_Rate_Limiter::get_instance()->get_telemetry();
                                         ✏️ ویرایش
                                     </button>
 
-                                    <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" title="وب کنسول">
+                                    <button type="button" class="ar-btn ar-btn-secondary ar-console-btn" data-name="<?php echo esc_attr($srv['name']); ?>" data-ip="<?php echo esc_attr($srv['ip_address']); ?>" title="وب کنسول ترمینال">
                                         💻 کنسول
-                                    </button>
-
-                                    <button type="button" class="ar-btn ar-btn-secondary ar-action-btn" data-action="terminate" data-id="<?php echo esc_attr($srv['resource_id']); ?>" data-name="<?php echo esc_attr($srv['name']); ?>" style="color: #ef4444;" title="حذف دائمی سرور">
-                                        🗑️ حذف
                                     </button>
                                 </div>
                             </div>
